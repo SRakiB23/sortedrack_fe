@@ -19,6 +19,7 @@ import {
 import AssignItem from "./Pages/AssignItems";
 import CreateTicket from "./Pages/CreateTicket";
 import ViewTicket from "./Pages/ViewTickets";
+import TicketDetails from "./Pages/ViewTickets/TicketDetails";
 
 function App() {
   return (
@@ -37,6 +38,7 @@ function App() {
           <Route path="assigned/" element={<AssignItem />} />
           <Route path="createTicket" element={<CreateTicket/>} />
           <Route path="viewTicket" element={<ViewTicket/>} />
+          <Route path="/tickets/:id" element={<TicketDetails />} /> 
         </Route>
 
         <Route path="login" element={<LoginForm />} />

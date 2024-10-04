@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Container, Row, Col, Form, Button } from "react-bootstrap";
-import { axiosSecure } from "../../../src/api/axios"; 
-import './CreateTicket.scss';
+import { axiosSecure } from "../../../src/api/axios";
+import "./CreateTicket.scss";
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css"; // Import styles for Quill
 
@@ -11,7 +11,7 @@ const CreateTicket = () => {
     department: "",
     device: "",
     priority: "",
-    additionalInfo: "" // This will now store HTML content from Quill
+    additionalInfo: "", // This will now store HTML content from Quill
   });
 
   // For handling non-Quill input fields
@@ -19,7 +19,7 @@ const CreateTicket = () => {
     const { name, value } = e.target;
     setFormData({
       ...formData,
-      [name]: value || "" // Ensure the value is never null or undefined
+      [name]: value || "", // Ensure the value is never null or undefined
     });
   };
 
@@ -27,7 +27,7 @@ const CreateTicket = () => {
   const handleQuillChange = (value) => {
     setFormData({
       ...formData,
-      additionalInfo: value // Set the HTML content from Quill editor
+      additionalInfo: value, // Set the HTML content from Quill editor
     });
   };
 
@@ -35,7 +35,7 @@ const CreateTicket = () => {
     e.preventDefault();
     try {
       console.log(formData);
-      const response = await axiosSecure.post("/tickets", formData); 
+      const response = await axiosSecure.post("/tickets", formData);
       console.log("Success:", response.data);
     } catch (error) {
       console.error("Error:", error);
@@ -50,12 +50,12 @@ const CreateTicket = () => {
           <Col>
             <Form.Group controlId="formUserName">
               <Form.Label>User Name</Form.Label>
-              <Form.Control 
-                type="text" 
-                name="userName" 
+              <Form.Control
+                type="text"
+                name="userName"
                 value={formData.userName || ""} // Ensure no null or undefined value
-                onChange={handleChange} 
-                disabled 
+                onChange={handleChange}
+                disabled
               />
             </Form.Group>
           </Col>
@@ -64,9 +64,9 @@ const CreateTicket = () => {
               <Form.Label>Department</Form.Label>
               <Form.Control
                 as="select"
-                name="department" 
+                name="department"
                 value={formData.department || ""} // Ensure no null or undefined value
-                onChange={handleChange} 
+                onChange={handleChange}
               >
                 <option value="">Select Department</option>
                 <option value="Admin">Admin</option>
@@ -85,7 +85,7 @@ const CreateTicket = () => {
               <Form.Label>Device List</Form.Label>
               <Form.Control
                 as="select"
-                name="device" 
+                name="device"
                 value={formData.device || ""} // Ensure no null or undefined value
                 onChange={handleChange}
               >
@@ -106,12 +106,19 @@ const CreateTicket = () => {
               <Form.Label>Priority</Form.Label>
               <Form.Control
                 as="select"
-                name="priority" 
+                name="priority"
                 value={formData.priority || ""}
-                onChange={handleChange} 
+                onChange={handleChange}
               >
                 <option value="">Select Priority</option>
-                <option value="High">High</option>
+                <option
+                  value="High"
+                  style={{
+                    color: "red",
+                  }}
+                >
+                  High
+                </option>
                 <option value="Medium">Medium</option>
                 <option value="Low">Low</option>
               </Form.Control>
