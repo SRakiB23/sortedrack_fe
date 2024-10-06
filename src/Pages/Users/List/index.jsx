@@ -18,12 +18,12 @@ const ListUser = () => {
   const ITEMS_PER_PAGE = 10;
 
   const fetchUserDetails = async () => {
-    axiosFetch({
-      axiosInstance: axiosSecure,
-      method: "GET",
-      url: "/user",
-      requestConfig: [
-        {
+    try {
+      const res = await axiosFetch({
+        axiosInstance: axiosSecure,
+        method: "GET",
+        url: "/user",
+        requestConfig: {
           headers: {
             Authorization: `Bearer ${
               localStorage.userDetails &&
@@ -31,8 +31,17 @@ const ListUser = () => {
             }`,
           },
         },
-      ],
-    });
+      });
+
+      // Check if response is valid and iterable
+      if (res && Array.isArray(res.user)) {
+        console.log(res.user); // Confirm it's an array
+      } else {
+        console.error("Response data is not iterable", res);
+      }
+    } catch (error) {
+      console.error("Error fetching user details:", error);
+    }
   };
 
   useEffect(() => {
@@ -64,8 +73,10 @@ const ListUser = () => {
     setTotalItems(filteredResult?.length);
 
     if (search) {
-      filteredResult = filteredResult.filter((currentItem) =>
-        currentItem.fname.toLowerCase().includes(search.toLowerCase()) || currentItem.username.toLowerCase().includes(search.toLowerCase())
+      filteredResult = filteredResult.filter(
+        (currentItem) =>
+          currentItem.fname.toLowerCase().includes(search.toLowerCase()) ||
+          currentItem.username.toLowerCase().includes(search.toLowerCase())
       );
     }
     return filteredResult?.slice(

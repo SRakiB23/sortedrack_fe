@@ -1,8 +1,57 @@
 .ticket-details-container{
     margin: auto;
     width: 70%;
+    font-size: large;
 }
 
-.ticket-dettails-h2{
-    padding: 20px;
+.ticket-details-h2{
+    padding: 30px 20px 20px 50px;
+}
+
+.priority-high {
+    color: red;
+  }
+  .priority-medium {
+    color: rgb(201, 201, 46);
+  }
+  .priority-low {
+    color: rgb(7, 137, 7);
+  }
+
+.strong-priority{
+    color: black;
+}
+
+.comments-section {
+    max-height: 300px; /* Set a fixed max height */
+    overflow-y: auto; /* Enable vertical scrolling */
+    border: 1px solid #ccc; /* Optional: add a border */
+    padding: 10px; /* Padding inside the comments section */
+    border-radius: 5px; /* Optional: rounded corners */
+    background-color: #f9f9f9; /* Light background color */
+  }
+  
+  .comment {
+    margin-bottom: 15px; /* Space between comments */
+    padding: 10px;
+    border-bottom: 1px solid #e0e0e0; /* Separator between comments */
+  }
+  
+  .comment:last-child {
+    border-bottom: none; /* Remove border from the last comment */
+  }
+  
+  .comment p {
+    margin: 0 0 5px; /* Margin around the paragraph */
+    font-size: 14px; /* Font size for comments */
+  }
+  
+  .comment small {
+    font-size: 12px; /* Smaller font for the date */
+    color: #888; /* Light gray color for the date */
+  }
+  
+  
+.status-select{
+    margin-top: 20px;
 }

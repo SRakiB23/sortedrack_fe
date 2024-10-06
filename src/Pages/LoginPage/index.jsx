@@ -26,13 +26,14 @@ const LoginForm = () => {
   useEffect(() => {
     if (userToken) {
       const decodedToken = jwt_decode(userToken);
-      const { email, role, branch, userId } = decodedToken;
+      const { email, role, branch, userId, userName } = decodedToken;
       const userDetails = {
         branch,
         email,
         role,
         userId,
         token: userToken,
+        userName,
       };
       localStorage.userDetails = JSON.stringify(userDetails);
       navigate("/", { replace: true });
@@ -79,7 +80,10 @@ const LoginForm = () => {
       <div className="form-outer">
         <div className="form-container">
           <div className="form-inner">
-            <img src="https://www.crafted.email/wp-content/uploads/2022/09/Privacy-policy-rafiki.png" alt="" />
+            <img
+              src="https://www.crafted.email/wp-content/uploads/2022/09/Privacy-policy-rafiki.png"
+              alt=""
+            />
           </div>
           <div className="form-2">
             <div className="form-signin">

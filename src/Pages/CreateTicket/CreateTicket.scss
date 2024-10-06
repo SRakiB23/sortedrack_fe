@@ -1,41 +1,38 @@
+.createticket-header{
+  padding: 30px 20px 20px 50px;
+}
+
 .create-ticket-form {
-    max-width: 1020px;
-    margin: 20px auto;
-  
-    .form-row {
-      display: flex;
-      justify-content: space-between;
-      margin-bottom: 15px;
-  
-      .form-group {
-        display: flex;
-        flex-direction: column;
-        width: 48%;
-  
-        label {
-          margin-bottom: 5px;
-          font-weight: bold;
-        }
-  
-        input, select {
-          padding: 10px;
-          border: 1px solid #ccc;
-          border-radius: 4px;
-        }
-      }
-    }
-  
-    .submit-button {
-      background-color: #007bff;
-      color: white;
-      padding: 10px 15px;
-      border: none;
-      border-radius: 4px;
-      cursor: pointer;
-  
-      &:hover {
-        background-color: #0056b3;
-      }
-    }
-  }
-  
+  width: 80%;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+.dot {
+  height: 10px;
+  width: 10px;
+  border-radius: 50%;
+  display: inline-block;
+  margin-left: 6px;
+}
+
+.red {
+  background-color: red;
+}
+
+.yellow {
+  background-color: rgb(206, 206, 25);
+}
+
+.green {
+  background-color: green;
+}
+
+
+.MuiFormControl-root {
+  margin-bottom: 16px;
+}
+
+.MuiButton-contained {
+  margin-top: 16px;
+}

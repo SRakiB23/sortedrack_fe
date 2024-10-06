@@ -1,147 +1,223 @@
-import React, { useState } from "react";
-import { Container, Row, Col, Form, Button } from "react-bootstrap";
+import React, { useEffect, useState } from "react";
+import {
+  Container,
+  TextField,
+  Button,
+  FormControl,
+  InputLabel,
+  MenuItem,
+  Select,
+  Box,
+} from "@mui/material";
+import Swal from "sweetalert2"; // Import SweetAlert2
 import { axiosSecure } from "../../../src/api/axios";
 import "./CreateTicket.scss";
-import ReactQuill from "react-quill";
-import "react-quill/dist/quill.snow.css"; // Import styles for Quill
 
 const CreateTicket = () => {
   const [formData, setFormData] = useState({
-    userName: "John Doe",
+    userName: "",
+    email: "",
     department: "",
     device: "",
     priority: "",
-    additionalInfo: "", // This will now store HTML content from Quill
+    additionalInfo: [],
+    status: "",
   });
 
-  // For handling non-Quill input fields
+  useEffect(() => {
+    const userDetails = JSON.parse(localStorage.getItem("userDetails"));
+    if (userDetails) {
+      setFormData((prevFormData) => ({
+        ...prevFormData,
+        userName: userDetails.userName, // Automatically set username
+        email: userDetails.email, // Set email
+      }));
+    }
+  }, []);
+
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData({
       ...formData,
-      [name]: value || "", // Ensure the value is never null or undefined
+      [name]: value || "",
     });
   };
 
-  // For handling Quill editor input (HTML content)
-  const handleQuillChange = (value) => {
-    setFormData({
-      ...formData,
-      additionalInfo: value, // Set the HTML content from Quill editor
-    });
+  const handleAdditionalInfoChange = (e) => {
+    const value = e.target.value;
+    setFormData((prevData) => ({
+      ...prevData,
+      additionalInfo: [{ comment: value, date: new Date() }],
+    }));
   };
 
   const onSubmit = async (e) => {
     e.preventDefault();
     try {
-      console.log(formData);
-      const response = await axiosSecure.post("/tickets", formData);
-      console.log("Success:", response.data);
+      const response = await axiosSecure.post("/tickets", {
+        ...formData,
+      });
+      // console.log("Success:", response.data);
+
+      // Display SweetAlert success notification
+      Swal.fire({
+        title: "Ticket Created!",
+        text: "Your ticket has been created successfully!.",
+        icon: "success",
+        confirmButtonColor: "#3085d6",
+        confirmButtonText: "OK",
+      });
     } catch (error) {
       console.error("Error:", error);
+
+      // Display error notification
+      Swal.fire({
+        title: "Error!",
+        text: "Please fill all the fields!!!.",
+        icon: "error",
+        confirmButtonColor: "#d33",
+        confirmButtonText: "Try Again",
+      });
     }
   };
 
   return (
-    <Container className="create-ticket-form" style={{ width: "80%" }}>
-      <h2 className="py-3">Create Ticket</h2>
-      <Form onSubmit={onSubmit}>
-        <Row className="mb-3">
-          <Col>
-            <Form.Group controlId="formUserName">
-              <Form.Label>User Name</Form.Label>
-              <Form.Control
-                type="text"
+    <div>
+      <h2 className="createticket-header">Create Ticket</h2>
+      <Container className="create-ticket-form">
+        <form onSubmit={onSubmit}>
+          <Box display="flex" flexDirection="column" gap={2}>
+            {/* Username and Email in one column */}
+            <Box display="flex" flexDirection="column" gap={2}>
+              <TextField
+                label="User Name"
                 name="userName"
-                value={formData.userName || ""} // Ensure no null or undefined value
+                value={formData.userName || ""}
                 onChange={handleChange}
+                fullWidth
                 disabled
               />
-            </Form.Group>
-          </Col>
-          <Col>
-            <Form.Group controlId="formDepartment">
-              <Form.Label>Department</Form.Label>
-              <Form.Control
-                as="select"
-                name="department"
-                value={formData.department || ""} // Ensure no null or undefined value
+              <TextField
+                label="Email"
+                name="email"
+                value={formData.email || ""}
                 onChange={handleChange}
-              >
-                <option value="">Select Department</option>
-                <option value="Admin">Admin</option>
-                <option value="HR">HR</option>
-                <option value="Finance">Finance</option>
-                <option value="Marketing">Marketing</option>
-                <option value="Developer">Developer</option>
-              </Form.Control>
-            </Form.Group>
-          </Col>
-        </Row>
+                fullWidth
+                disabled
+              />
+            </Box>
 
-        <Row className="mb-3">
-          <Col>
-            <Form.Group controlId="formDevice">
-              <Form.Label>Device List</Form.Label>
-              <Form.Control
-                as="select"
-                name="device"
-                value={formData.device || ""} // Ensure no null or undefined value
-                onChange={handleChange}
-              >
-                <option value="">Select Device/Accessories</option>
-                <option value="Laptop">Laptop</option>
-                <option value="Monitor">Monitor</option>
-                <option value="Keyboard">Keyboard</option>
-                <option value="Mouse">Mouse</option>
-                <option value="Headphone">Headphone</option>
-                <option value="Webcam">Webcam</option>
-                <option value="Desktop-Items">Desktop Items</option>
-                <option value="others">Others</option>
-              </Form.Control>
-            </Form.Group>
-          </Col>
-          <Col>
-            <Form.Group controlId="formPriority">
-              <Form.Label>Priority</Form.Label>
-              <Form.Control
-                as="select"
-                name="priority"
-                value={formData.priority || ""}
-                onChange={handleChange}
-              >
-                <option value="">Select Priority</option>
-                <option
-                  value="High"
-                  style={{
-                    color: "red",
-                  }}
+            {/* Department in its own column */}
+            <Box flex="1">
+              <FormControl fullWidth>
+                <InputLabel id="department-label">Department</InputLabel>
+                <Select
+                  labelId="department-label"
+                  id="department"
+                  name="department"
+                  value={formData.department || ""}
+                  onChange={handleChange}
+                  label="Department"
                 >
-                  High
-                </option>
-                <option value="Medium">Medium</option>
-                <option value="Low">Low</option>
-              </Form.Control>
-            </Form.Group>
-          </Col>
-        </Row>
+                  <MenuItem value="">
+                    <em>Select Department</em>
+                  </MenuItem>
+                  <MenuItem value="Admin">Admin</MenuItem>
+                  <MenuItem value="HR">HR</MenuItem>
+                  <MenuItem value="Finance">Finance</MenuItem>
+                  <MenuItem value="Marketing">Marketing</MenuItem>
+                  <MenuItem value="Developer">Developer</MenuItem>
+                </Select>
+              </FormControl>
+            </Box>
 
-        {formData.device && (
-          <Form.Group className="my-4" controlId="exampleForm.ControlTextarea1">
-            <Form.Label>Additional Information</Form.Label>
-            <ReactQuill
-              theme="snow"
-              value={formData.additionalInfo} // Ensure no null or undefined value
-              onChange={handleQuillChange} // Handle HTML content from Quill
-            />
-          </Form.Group>
-        )}
+            {/* Device and Priority in one column */}
+            <Box display="flex" gap={2}>
+              <FormControl fullWidth>
+                <InputLabel id="device-label">Device</InputLabel>
+                <Select
+                  labelId="device-label"
+                  id="device"
+                  name="device"
+                  value={formData.device || ""}
+                  onChange={handleChange}
+                  label="Device"
+                >
+                  <MenuItem value="">
+                    <em>Select Device/Accessories</em>
+                  </MenuItem>
+                  <MenuItem value="Laptop">Laptop</MenuItem>
+                  <MenuItem value="Monitor">Monitor</MenuItem>
+                  <MenuItem value="Keyboard">Keyboard</MenuItem>
+                  <MenuItem value="Mouse">Mouse</MenuItem>
+                  <MenuItem value="Headphone">Headphone</MenuItem>
+                  <MenuItem value="Webcam">Webcam</MenuItem>
+                  <MenuItem value="Desktop-Items">Desktop Items</MenuItem>
+                  <MenuItem value="others">Others</MenuItem>
+                </Select>
+              </FormControl>
 
-        <Button variant="primary" type="submit" className="submit-button">
-          Submit
-        </Button>
-      </Form>
-    </Container>
+              <FormControl fullWidth>
+                <InputLabel id="priority-label">Priority</InputLabel>
+                <Select
+                  labelId="priority-label"
+                  id="priority"
+                  name="priority"
+                  value={formData.priority || ""}
+                  onChange={handleChange}
+                  label="Priority"
+                >
+                  <MenuItem value="">
+                    <em>Select Priority</em>
+                  </MenuItem>
+                  <MenuItem value="High">
+                    High <span className="dot red"> </span>
+                  </MenuItem>
+                  <MenuItem value="Medium">
+                    Medium <span className="dot yellow"> </span>
+                  </MenuItem>
+                  <MenuItem value="Low">
+                    Low <span className="dot green"> </span>
+                  </MenuItem>
+                </Select>
+              </FormControl>
+            </Box>
+
+            {/* Additional Info */}
+            {formData.device && (
+              <Box>
+                <TextField
+                  label="Additional Info"
+                  name="additionalInfo"
+                  value={
+                    formData.additionalInfo.length
+                      ? formData.additionalInfo[0].comment
+                      : ""
+                  }
+                  onChange={handleAdditionalInfoChange}
+                  multiline
+                  rows={4}
+                  fullWidth
+                  placeholder="Type your additional info here..."
+                />
+              </Box>
+            )}
+
+            {/* Submit button */}
+            <Box>
+              <Button
+                variant="contained"
+                color="primary"
+                type="submit"
+                fullWidth
+              >
+                Submit
+              </Button>
+            </Box>
+          </Box>
+        </form>
+      </Container>
+    </div>
   );
 };
 
