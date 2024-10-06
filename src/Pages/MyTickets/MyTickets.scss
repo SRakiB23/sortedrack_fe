@@ -1,0 +1,23 @@
+.mytickets-h2{
+    padding: 30px 20px 20px 50px;
+}
+
+.my-tickets-container {
+    padding: 50px;
+    display: flex;
+    flex-wrap: wrap; 
+    justify-content: space-between; 
+  }
+  
+  .my-ticket-card {
+    width: 300px; 
+  }
+
+  .card{
+    height: 300px;
+  }
+
+  .cardAction{
+    margin-top: 10px;
+  }
+  
