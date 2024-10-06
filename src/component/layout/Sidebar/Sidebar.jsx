@@ -3,6 +3,8 @@ import { useContext } from "react";
 import { NavLink } from "react-router-dom";
 import { SidebarContext } from "../../../contexts/SidebarContext";
 import logo from "../../../assests/images/sorted-rack-logo.svg";
+import { IoCreateOutline, IoTicketOutline } from "react-icons/io5";
+import { MdPreview } from "react-icons/md";
 
 import "./Sidebar.scss";
 
@@ -10,9 +12,16 @@ const Sidebar = () => {
   const { activeMenu, setActiveMenu } = useContext(SidebarContext);
 
   return (
-    <div className={activeMenu ? "sidebar d-flex bg-dark hide" : "sidebar d-flex bg-dark"}>
+    <div
+      className={
+        activeMenu ? "sidebar d-flex bg-dark hide" : "sidebar d-flex bg-dark"
+      }
+    >
       <div className="d-flex flex-column flex-shrink-0 px-3 text-white w-100">
-        <a href="/" className="d-flex align-items-center pt-3 mb-3 mb-md-0 me-md-auto text-white text-decoration-none">
+        <a
+          href="/"
+          className="d-flex align-items-center pt-3 mb-3 mb-md-0 me-md-auto text-white text-decoration-none"
+        >
           <img alt="Sorted Rack" src={logo} width="140px" />
         </a>
 
@@ -24,7 +33,9 @@ const Sidebar = () => {
               <NavLink
                 end={true}
                 to="/"
-                className={({ isActive }) => `nav-link text-white ${isActive ? "active" : undefined}`}
+                className={({ isActive }) =>
+                  `nav-link text-white ${isActive ? "active" : undefined}`
+                }
               >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -42,7 +53,9 @@ const Sidebar = () => {
             <li>
               <NavLink
                 to="/user"
-                className={({ isActive }) => `nav-link text-white ${isActive ? "active" : undefined}`}
+                className={({ isActive }) =>
+                  `nav-link text-white ${isActive ? "active" : undefined}`
+                }
               >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -60,7 +73,9 @@ const Sidebar = () => {
             <li>
               <NavLink
                 to="/stock"
-                className={({ isActive }) => `nav-link text-white ${isActive ? "active" : undefined}`}
+                className={({ isActive }) =>
+                  `nav-link text-white ${isActive ? "active" : undefined}`
+                }
               >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -83,7 +98,9 @@ const Sidebar = () => {
             <li>
               <NavLink
                 to="/assigned"
-                className={({ isActive }) => `nav-link text-white ${isActive ? "active" : undefined}`}
+                className={({ isActive }) =>
+                  `nav-link text-white ${isActive ? "active" : undefined}`
+                }
               >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -105,45 +122,34 @@ const Sidebar = () => {
             <li>
               <NavLink
                 to="/createTicket"
-                className={({ isActive }) => `nav-link text-white ${isActive ? "active" : undefined}`}
+                className={({ isActive }) =>
+                  `nav-link text-white ${isActive ? "active" : undefined}`
+                }
               >
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="16"
-                  height="16"
-                  fill="currentColor"
-                  className="bi bi-person-check pe-none me-2"
-                  viewBox="0 0 16 16"
-                >
-                  <path d="M6 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6zm2-3a2 2 0 1 1-4 0 2 2 0 0 1 4 0zm4 8c0 1-1 1-1 1H1s-1 0-1-1 1-4 6-4 6 3 6 4zm-1-.004c-.001-.246-.154-.986-.832-1.664C9.516 10.68 8.289 10 6 10c-2.29 0-3.516.68-4.168 1.332-.678.678-.83 1.418-.832 1.664h10z" />
-                  <path
-                    fillRule="evenodd"
-                    d="M15.854 5.146a.5.5 0 0 1 0 .708l-3 3a.5.5 0 0 1-.708 0l-1.5-1.5a.5.5 0 0 1 .708-.708L12.5 7.793l2.646-2.647a.5.5 0 0 1 .708 0z"
-                  />
-                </svg>
+                <IoCreateOutline style={{ marginRight: "6px" }} />
                 <span>Create Ticket</span>
               </NavLink>
             </li>
             <li>
               <NavLink
                 to="/viewTicket"
-                className={({ isActive }) => `nav-link text-white ${isActive ? "active" : undefined}`}
+                className={({ isActive }) =>
+                  `nav-link text-white ${isActive ? "active" : undefined}`
+                }
               >
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="16"
-                  height="16"
-                  fill="currentColor"
-                  className="bi bi-person-check pe-none me-2"
-                  viewBox="0 0 16 16"
-                >
-                  <path d="M6 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6zm2-3a2 2 0 1 1-4 0 2 2 0 0 1 4 0zm4 8c0 1-1 1-1 1H1s-1 0-1-1 1-4 6-4 6 3 6 4zm-1-.004c-.001-.246-.154-.986-.832-1.664C9.516 10.68 8.289 10 6 10c-2.29 0-3.516.68-4.168 1.332-.678.678-.83 1.418-.832 1.664h10z" />
-                  <path
-                    fillRule="evenodd"
-                    d="M15.854 5.146a.5.5 0 0 1 0 .708l-3 3a.5.5 0 0 1-.708 0l-1.5-1.5a.5.5 0 0 1 .708-.708L12.5 7.793l2.646-2.647a.5.5 0 0 1 .708 0z"
-                  />
-                </svg>
+                <MdPreview style={{ marginRight: "6px" }} />
                 <span>View Tickets</span>
+              </NavLink>
+            </li>
+            <li>
+              <NavLink
+                to="/myTickets"
+                className={({ isActive }) =>
+                  `nav-link text-white ${isActive ? "active" : undefined}`
+                }
+              >
+                <IoTicketOutline style={{ marginRight: "6px" }} />
+                <span>My Tickets</span>
               </NavLink>
             </li>
           </ul>
@@ -158,10 +164,19 @@ const Sidebar = () => {
             data-bs-toggle="dropdown"
             aria-expanded="false"
           >
-            <img src="https://github.com/mdo.png" alt="" width="32" height="32" className="rounded-circle me-2" />
+            <img
+              src="https://github.com/mdo.png"
+              alt=""
+              width="32"
+              height="32"
+              className="rounded-circle me-2"
+            />
             <strong>mdo</strong>
           </a>
-          <ul className="dropdown-menu dropdown-menu-dark text-small shadow" aria-labelledby="dropdownUser1">
+          <ul
+            className="dropdown-menu dropdown-menu-dark text-small shadow"
+            aria-labelledby="dropdownUser1"
+          >
             <li>
               <a className="dropdown-item" href="#">
                 New project...

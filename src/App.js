@@ -20,6 +20,7 @@ import AssignItem from "./Pages/AssignItems";
 import CreateTicket from "./Pages/CreateTicket";
 import ViewTicket from "./Pages/ViewTickets";
 import TicketDetails from "./Pages/ViewTickets/TicketDetails";
+import MyTickets from "./Pages/MyTickets";
 
 function App() {
   return (
@@ -36,9 +37,10 @@ function App() {
           <Route path="user" element={<ListUser />} />
           <Route path="user/edit/:id" element={<EditUser />} />
           <Route path="assigned/" element={<AssignItem />} />
-          <Route path="createTicket" element={<CreateTicket/>} />
-          <Route path="viewTicket" element={<ViewTicket/>} />
-          <Route path="/tickets/:id" element={<TicketDetails />} /> 
+          <Route path="createTicket" element={<CreateTicket />} />
+          <Route path="viewTicket" element={<ViewTicket />} />
+          <Route path="/tickets/:id" element={<TicketDetails />} />
+          <Route path="/myTickets" element={<MyTickets />} />
         </Route>
 
         <Route path="login" element={<LoginForm />} />
