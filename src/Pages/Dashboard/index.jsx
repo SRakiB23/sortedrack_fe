@@ -1,49 +1,58 @@
 import React, { useState, useEffect } from "react";
 import { axiosSecure } from "../../api/axios";
+import { useNavigate } from "react-router-dom";
 
-const Dashbaord = () => {
-  const [dashboardStats, setDashboardStats] = useState({});
+const Dashboard = () => {
+  const [dashboardStats, setDashboardStats] = useState([]);
+  const navigate = useNavigate();  // Move useNavigate outside of useEffect
 
   useEffect(() => {
-    (async () => {
-      const response = await axiosSecure.get("/product", {
-        headers: {
-          Authorization: `Bearer ${localStorage.userDetails && JSON.parse(localStorage.userDetails).token}`,
-        },
-      });
-      if (response?.data?.products) {
-        const { products } = response.data;
+    const userDetails = localStorage.userDetails && JSON.parse(localStorage.userDetails);
 
-        const unAssignedSystemCount = products.filter(
-          (product) => product.productCategory === "System" && product.tag === "notassigned"
-        ).length;
-        const assignedSystemCount = products.filter(
-          (product) => product.productCategory === "System" && product.tag === "assigned"
-        ).length;
-
-        const unAssignedAccessoriesCount = products.filter(
-          (product) => product.productCategory === "Accessories" && product.tag === "notassigned"
-        ).length;
-
-        const assignedAccessoriesCount = products.filter(
-          (product) => product.productCategory === "Accessories" && product.tag === "assigned"
-        ).length;
-
-        setDashboardStats([
-          {
-            deviceCategory: "System",
-            availableDevicesCount: unAssignedSystemCount,
-            assignedDevicesCount: assignedSystemCount,
+    if (userDetails?.role === "user") {
+      // If the user is a 'user', redirect to the /myTickets page
+      navigate("/myTickets");
+    } else {
+      (async () => {
+        const response = await axiosSecure.get("/product", {
+          headers: {
+            Authorization: `Bearer ${userDetails?.token}`,
           },
-          {
-            deviceCategory: "Accessories",
-            availableDevicesCount: unAssignedAccessoriesCount,
-            assignedDevicesCount: assignedAccessoriesCount,
-          },
-        ]);
-      }
-    })();
-  }, []);
+        });
+        if (response?.data?.products) {
+          const { products } = response.data;
+
+          const unAssignedSystemCount = products.filter(
+            (product) => product.productCategory === "System" && product.tag === "notassigned"
+          ).length;
+          const assignedSystemCount = products.filter(
+            (product) => product.productCategory === "System" && product.tag === "assigned"
+          ).length;
+
+          const unAssignedAccessoriesCount = products.filter(
+            (product) => product.productCategory === "Accessories" && product.tag === "notassigned"
+          ).length;
+
+          const assignedAccessoriesCount = products.filter(
+            (product) => product.productCategory === "Accessories" && product.tag === "assigned"
+          ).length;
+
+          setDashboardStats([
+            {
+              deviceCategory: "System",
+              availableDevicesCount: unAssignedSystemCount,
+              assignedDevicesCount: assignedSystemCount,
+            },
+            {
+              deviceCategory: "Accessories",
+              availableDevicesCount: unAssignedAccessoriesCount,
+              assignedDevicesCount: assignedAccessoriesCount,
+            },
+          ]);
+        }
+      })();
+    }
+  }, [navigate]);  // Include navigate as a dependency
 
   return (
     <div className="stock-main-body container">
@@ -59,11 +68,13 @@ const Dashbaord = () => {
                   Available: {stock.availableDevicesCount}
                 </p>
                 <div className="total-stock row d-flex justify-content-center align-items-center">
-                  <div className="col-md-6 text-upercase">
+                  <div className="col-md-6 text-uppercase">
                     <p>Total</p>
                   </div>
                   <div className="col-md-6">
-                    <h1 className="fw-normal">{stock.availableDevicesCount + stock.assignedDevicesCount}</h1>
+                    <h1 className="fw-normal">
+                      {stock.availableDevicesCount + stock.assignedDevicesCount}
+                    </h1>
                   </div>
                 </div>
               </div>
@@ -74,4 +85,4 @@ const Dashbaord = () => {
   );
 };
 
-export default Dashbaord;
+export default Dashboard;

@@ -1,13 +1,25 @@
-import { useLocation, Navigate, Outlet } from "react-router-dom";
+import { useLocation, Navigate, Outlet, useNavigate } from "react-router-dom";
 import SidebarContextProvider from "../../contexts/SidebarContext";
 import { isLoggedIn, getUserDetails } from "../../service";
 import { Footer, Header, Sidebar } from "../../component";
+import { useEffect } from "react";
 
 const Layout = () => {
   const location = useLocation();
   const { role } = getUserDetails();
+  const navigate = useNavigate()
+
+  useEffect(() => {
+    if(role === 'user') {
+      navigate("/myTickets")
+    }
+    // if(role === 'superadmin') {
+    //   navigate("/viewTi");
+    // }
+  }, [role])
+
   return isLoggedIn() ? (
-    role === "superadmin" ? (
+    ["superadmin", "admin", "user"].includes(role) ? ( // Allow superadmin, admin, and user
       <SidebarContextProvider>
         <main className="d-flex flex-nowrap">
           <Sidebar />

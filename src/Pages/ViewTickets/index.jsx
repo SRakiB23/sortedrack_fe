@@ -83,7 +83,7 @@ const ViewTicket = () => {
             inputProps={{ "aria-label": "Without label" }}
           >
             <MenuItem value="">
-              <em>Sort by Priority</em>
+              <span>Sort by Priority</span>
             </MenuItem>
             <MenuItem value="High">High</MenuItem>
             <MenuItem value="Medium">Medium</MenuItem>
@@ -98,7 +98,7 @@ const ViewTicket = () => {
             inputProps={{ "aria-label": "Without label" }}
           >
             <MenuItem value="">
-              <em>Sort by Status</em>
+              <span>Sort by Status</span>
             </MenuItem>
             <MenuItem value="Pending">Pending</MenuItem>
             <MenuItem value="In progress">In progress</MenuItem>

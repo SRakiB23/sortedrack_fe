@@ -40,34 +40,35 @@ const MyTickets = () => {
           myTickets.map((ticket) => (
             <Box key={ticket._id} className="my-ticket-card">
               <Card variant="outlined" className="card">
-                <CardContent>
-                  <Typography
-                    gutterBottom
-                    sx={{ color: "text.secondary", fontSize: 14 }}
-                  >
+                <div className="card-content">
+                <CardContent className="card-content">
+                  <Typography gutterBottom sx={{ color: "text.secondary", fontSize: 14 }}>
                     Ticket ID: {ticket._id}
                   </Typography>
                   <Typography variant="h5" component="div">
-                    User: {ticket.userName}
+                    <span className="bold">Username: </span> {ticket.userName}
                   </Typography>
                   <Typography sx={{ color: "text.secondary", mb: 1.5 }}>
-                    Department: {ticket.department}
+                    <span className="bold">Department: </span>{ticket.department}
                   </Typography>
-                  <Typography variant="body2">
-                    Device: {ticket.device}
+                  <Typography variant="body2" className="ticket-details">
+                    <span className="bold">Devices: </span> {ticket.device}
                     <br />
-                    Priority: {ticket.priority}
+                    <span className="bold">Priority: </span> {ticket.priority}
                     <br />
-                    Status: {ticket.status}
+                    <span className="bold">Status: </span> {ticket.status}
                     <br />
-                    Additional Info:{" "}
+                    <span className="bold">Additional Info: </span>
                     {ticket.additionalInfo[0]?.comment
                       ? truncateComment(ticket.additionalInfo[0].comment)
                       : "No comments"}
                   </Typography>
                 </CardContent>
-                <CardActions className="cardAction">
-                  <Button size="small">View Details</Button>
+                </div>
+                <CardActions className="card-action">
+                  <Button className="details" size="small">Details</Button>
+                  <Button size="small">Update</Button>
+                  <Button size="small">Delete</Button>
                 </CardActions>
               </Card>
             </Box>

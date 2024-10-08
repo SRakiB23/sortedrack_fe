@@ -23,12 +23,12 @@
 }
 
 .comments-section {
-    max-height: 300px; /* Set a fixed max height */
-    overflow-y: auto; /* Enable vertical scrolling */
-    border: 1px solid #ccc; /* Optional: add a border */
-    padding: 10px; /* Padding inside the comments section */
-    border-radius: 5px; /* Optional: rounded corners */
-    background-color: #f9f9f9; /* Light background color */
+    max-height: 200px; 
+    overflow-y: auto; 
+    border: 1px solid #ccc; 
+    padding: 8px; 
+    border-radius: 5px; 
+    background-color: #f9f9f9; 
   }
   
   .comment {

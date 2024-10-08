@@ -5,19 +5,32 @@
 .my-tickets-container {
     padding: 50px;
     display: flex;
-    flex-wrap: wrap; 
-    justify-content: space-between; 
+    flex-wrap: wrap;
+    gap: 10px;
   }
   
   .my-ticket-card {
-    width: 300px; 
+    width: 300px;
   }
 
   .card{
     height: 300px;
   }
 
-  .cardAction{
-    margin-top: 10px;
+  .card-action{
+    margin-left: 34px;
+    margin-top: 20px;
+  }
+
+  .bold{
+    font-weight: 600;
+  }
+
+  .card-content{
+    height: 220px;
+  }
+
+  .details{
+    
   }
   

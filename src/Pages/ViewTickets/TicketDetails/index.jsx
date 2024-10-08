@@ -38,15 +38,14 @@ const TicketDetails = () => {
       const response = await axiosSecure.put(`/tickets/${id}`, {
         status,
         comment,
-        author: "", // Add appropriate values here
-        email: "", // Add appropriate values here
+        author: "", 
+        email: "", 
       });
 
       console.log("Ticket updated successfully:", response.data);
-      setTicket(response.data); // Update ticket with new data
-      setComment(""); // Clear comment field after submit
+      setTicket(response.data); 
+      setComment(""); 
 
-      // Show success alert using SweetAlert2
       Swal.fire({
         title: "Ticket Updated!",
         text: "Your ticket has been updated successfully!",

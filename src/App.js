@@ -37,8 +37,8 @@ function App() {
           <Route path="user" element={<ListUser />} />
           <Route path="user/edit/:id" element={<EditUser />} />
           <Route path="assigned/" element={<AssignItem />} />
-          <Route path="createTicket" element={<CreateTicket />} />
-          <Route path="viewTicket" element={<ViewTicket />} />
+          <Route path="/createTicket" element={<CreateTicket />} />
+          <Route path="/viewTicket" element={<ViewTicket />} />
           <Route path="/tickets/:id" element={<TicketDetails />} />
           <Route path="/myTickets" element={<MyTickets />} />
         </Route>
