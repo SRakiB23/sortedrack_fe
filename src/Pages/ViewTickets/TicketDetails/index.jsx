@@ -81,68 +81,74 @@ const TicketDetails = () => {
   }
 
   return (
-    <div>
-      <div>
-        <h2 className="ticket-details-h2">Ticket Details</h2>
-      </div>
+    <div className="body">
       <div className="main-container">
         <div className="leftside">
           <div className="leftside-details">
+          <h2 className="ticket-details-h2">Ticket Details</h2>
+          <hr className=""/>
             <div className="leftside-content-first">
-              <div>
+              <div className="titles">
                 <div className="icon-details">
                   <FaRegUserCircle />
                   <p>
                     User name <br />
                   </p>
                 </div>
-                <p className="items">{ticket.userName}</p>
-              </div>
-              <div>
                 <div className="icon-details">
                   <MdEmail />
                   <p>Email</p>
                 </div>
-                <p className="items">{ticket.email}</p>
-              </div>
-              <div>
                 <div className="icon-details">
                   <HiOutlineBuildingOffice2 />
                   <p>Department</p>
                 </div>
-                <p className="items">{ticket.department}</p>
-              </div>
-              <div>
                 <div className="icon-details">
                   <MdDevices />
                   <p>Requested Device</p>
                 </div>
-                <p className="items">{ticket.device}</p>
-              </div>
-            </div>
-            <div className="leftside-content-second">
-              <div>
                 <div className="icon-details">
                   <FcHighPriority />
                   <p>Priority</p>
                 </div>
-                <p className="items">{ticket.priority}</p>
-              </div>
-              <div>
                 <div className="icon-details">
                   <GrStatusUnknown />
                   <p>Status</p>
                 </div>
-                <p className="items">{ticket.status}</p>
+              </div>
+              <div className="info">
+                <div className="icon-details2">
+                  {ticket.userName}
+                </div>
+                <div className="icon-details2">
+                  {ticket.email}
+                </div>
+                <div className="icon-details2">
+                  {ticket.department}
+                </div>
+                <div className="icon-details2">
+                  {ticket.device}
+                </div>
+                <div className="icon-details2">
+                  {ticket.priority}
+                </div>
+                <div className="icon-details2">
+                  {ticket.status}
+                </div>
+              </div>
+              <div>
               </div>
             </div>
+
           </div>
+          <div className="change-status-container1">
           <div className="change-status-container">
             <div className="change-status">
               <MdOutlinePublishedWithChanges />
               <p>Change Status</p>
             </div>
-            <FormControl>
+            <div>
+            <FormControl fullWidth>
               <Select
                 native
                 name="status"
@@ -156,45 +162,60 @@ const TicketDetails = () => {
                 <option value="Rejected">Rejected</option>
               </Select>
             </FormControl>
+            </div>
           </div>
           <div className="update-button">
             <Button
               variant="contained"
               color="success"
               onClick={handleSubmit}
-              style={{ width: "420px" }}
+              style={{ width: "400px" }}
             >
               Update Ticket
             </Button>
           </div>
-        </div>
-        <div className="rightside">
-          <h3>Comments</h3>
-          <div className="comments-section">
-            {ticket.additionalInfo &&
-            Array.isArray(ticket.additionalInfo) &&
-            ticket.additionalInfo.length > 0 ? (
-              <div>
-                {ticket.additionalInfo.map((commentObj, index) => (
-                  <div
-                    key={commentObj._id || index}
-                    className={`comment ${
-                      commentObj.authorRole === "admin" ||
-                      commentObj.authorRole === "superadmin"
-                        ? "left"
-                        : "right"
-                    }`}
-                  >
-                    <p>{commentObj.comment}</p>
-                    <small>{new Date(commentObj.date).toLocaleString()}</small>
-                  </div>
-                ))}
-              </div>
-            ) : (
-              <p>No comments available.</p>
-            )}
           </div>
         </div>
+        <div className="rightside">
+  <h2 className="comments">Comments</h2>
+  <hr />
+  <div className="comments-section">
+    {ticket.additionalInfo &&
+    Array.isArray(ticket.additionalInfo) &&
+    ticket.additionalInfo.length > 0 ? (
+      <div>
+        {ticket.additionalInfo.map((commentObj, index) => (
+          <div
+            key={commentObj._id || index}
+            className={`comment ${
+              commentObj.authorRole === "admin" ||
+              commentObj.authorRole === "superadmin"
+                ? "left"
+                : "right"
+            }`}
+          >
+            <p>{commentObj.comment}</p>
+            <small>{new Date(commentObj.date).toLocaleString()}</small>
+          </div>
+        ))}
+      </div>
+    ) : (
+      <p>No comments available.</p>
+    )}
+  </div>
+
+  {/* Add the textarea for new comments */}
+  <div className="comment-input">
+    <textarea
+      placeholder="Add a comment..."
+      rows="4"
+      style={{width:"720px"}}
+      className="comment-textarea"
+      // onChange={(e) => setNewComment(e.target.value)} // Handle the textarea input
+    />
+  </div>
+</div>
+
       </div>
     </div>
   );
