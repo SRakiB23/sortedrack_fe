@@ -4,6 +4,15 @@ import { axiosSecure } from "../../../api/axios";
 import "./TicketDetails.scss";
 import { FormControl, Select, TextField, Button } from "@mui/material";
 import Swal from "sweetalert2";
+import { FaCommentAlt, FaPlus, FaRegUserCircle } from "react-icons/fa";
+import {
+  MdDevices,
+  MdEmail,
+  MdOutlinePublishedWithChanges,
+} from "react-icons/md";
+import { HiOutlineBuildingOffice2 } from "react-icons/hi2";
+import { FcHighPriority } from "react-icons/fc";
+import { GrStatusUnknown } from "react-icons/gr";
 
 const TicketDetails = () => {
   const { id } = useParams();
@@ -38,13 +47,13 @@ const TicketDetails = () => {
       const response = await axiosSecure.put(`/tickets/${id}`, {
         status,
         comment,
-        author: "", 
-        email: "", 
+        author: "",
+        email: "",
       });
 
       console.log("Ticket updated successfully:", response.data);
-      setTicket(response.data); 
-      setComment(""); 
+      setTicket(response.data);
+      setComment("");
 
       Swal.fire({
         title: "Ticket Updated!",
@@ -73,94 +82,119 @@ const TicketDetails = () => {
 
   return (
     <div>
-      <h2 className="ticket-details-h2">Ticket Details</h2>
-      <div className="ticket-details-container">
-        <p>
-          <strong>User Name:</strong> {ticket.userName}
-        </p>
-        <p>
-          <strong>Email:</strong> {ticket.email}
-        </p>
-        <p>
-          <strong>Department:</strong> {ticket.department}
-        </p>
-        <p>
-          <strong>Device:</strong> {ticket.device}
-        </p>
-        <p
-          className={
-            ticket.priority === "High"
-              ? "priority-high"
-              : ticket.priority === "Medium"
-              ? "priority-medium"
-              : ticket.priority === "Low"
-              ? "priority-low"
-              : ""
-          }
-        >
-          <strong style={{ color: "black" }}>Priority: </strong>
-          {ticket.priority}
-        </p>
-
-        {/* Displaying additional info (comments are part of this) */}
-
-        <div className="comments-section">
-          <h3>Comments</h3>
-          {ticket.additionalInfo &&
-          Array.isArray(ticket.additionalInfo) &&
-          ticket.additionalInfo.length > 0 ? (
-            <div>
-              {ticket.additionalInfo.map((commentObj, index) => (
-                <div key={commentObj._id || index} className="comment">
+      <div>
+        <h2 className="ticket-details-h2">Ticket Details</h2>
+      </div>
+      <div className="main-container">
+        <div className="leftside">
+          <div className="leftside-details">
+            <div className="leftside-content-first">
+              <div>
+                <div className="icon-details">
+                  <FaRegUserCircle />
                   <p>
-                    {/* <strong>Comment:</strong>  */}
-                    {commentObj.comment}
+                    User name <br />
                   </p>
-                  <small>{new Date(commentObj.date).toLocaleString()}</small>
                 </div>
-              ))}
+                <p className="items">{ticket.userName}</p>
+              </div>
+              <div>
+                <div className="icon-details">
+                  <MdEmail />
+                  <p>Email</p>
+                </div>
+                <p className="items">{ticket.email}</p>
+              </div>
+              <div>
+                <div className="icon-details">
+                  <HiOutlineBuildingOffice2 />
+                  <p>Department</p>
+                </div>
+                <p className="items">{ticket.department}</p>
+              </div>
+              <div>
+                <div className="icon-details">
+                  <MdDevices />
+                  <p>Requested Device</p>
+                </div>
+                <p className="items">{ticket.device}</p>
+              </div>
             </div>
-          ) : (
-            <p>No comments available.</p>
-          )}
+            <div className="leftside-content-second">
+              <div>
+                <div className="icon-details">
+                  <FcHighPriority />
+                  <p>Priority</p>
+                </div>
+                <p className="items">{ticket.priority}</p>
+              </div>
+              <div>
+                <div className="icon-details">
+                  <GrStatusUnknown />
+                  <p>Status</p>
+                </div>
+                <p className="items">{ticket.status}</p>
+              </div>
+            </div>
+          </div>
+          <div className="change-status-container">
+            <div className="change-status">
+              <MdOutlinePublishedWithChanges />
+              <p>Change Status</p>
+            </div>
+            <FormControl>
+              <Select
+                native
+                name="status"
+                value={status || ""}
+                onChange={handleStatusChange}
+                className="status-select"
+              >
+                <option value="">Change Status</option>
+                <option value="In progress">In Progress</option>
+                <option value="Solved">Solved</option>
+                <option value="Rejected">Rejected</option>
+              </Select>
+            </FormControl>
+          </div>
+          <div className="update-button">
+            <Button
+              variant="contained"
+              color="success"
+              onClick={handleSubmit}
+              style={{ width: "420px" }}
+            >
+              Update Ticket
+            </Button>
+          </div>
         </div>
-
-        {/* Status Selector */}
-        <FormControl fullWidth>
-          <Select
-            native
-            name="status"
-            value={status || ""}
-            onChange={handleStatusChange}
-            className="status-select"
-          >
-            <option value="">Change Status</option>
-            <option value="In progress">In Progress</option>
-            <option value="Solved">Solved</option>
-            <option value="Rejected">Rejected</option>
-          </Select>
-        </FormControl>
-
-        {/* Comment Input */}
-        <TextField
-          fullWidth
-          multiline
-          rows={4}
-          label="Comment"
-          value={comment}
-          onChange={handleCommentChange}
-          style={{ marginTop: "20px" }}
-        />
-
-        {/* Submit Button */}
-        <Button
-          variant="contained"
-          color="primary"
-          onClick={handleSubmit}
-          style={{ marginTop: "20px" }}
-        >
-          Update Ticket
-        </Button>
+        <div className="rightside">
+          <h3>Comments</h3>
+          <div className="comments-section">
+            {ticket.additionalInfo &&
+            Array.isArray(ticket.additionalInfo) &&
+            ticket.additionalInfo.length > 0 ? (
+              <div>
+                {ticket.additionalInfo.map((commentObj, index) => (
+                  <div
+                    key={commentObj._id || index}
+                    className={`comment ${
+                      commentObj.authorRole === "admin" ||
+                      commentObj.authorRole === "superadmin"
+                        ? "left"
+                        : "right"
+                    }`}
+                  >
+                    <p>{commentObj.comment}</p>
+                    <small>{new Date(commentObj.date).toLocaleString()}</small>
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <p>No comments available.</p>
+            )}
+          </div>
+        </div>
       </div>
     </div>
   );

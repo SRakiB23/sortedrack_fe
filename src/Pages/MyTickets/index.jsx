@@ -41,32 +41,38 @@ const MyTickets = () => {
             <Box key={ticket._id} className="my-ticket-card">
               <Card variant="outlined" className="card">
                 <div className="card-content">
-                <CardContent className="card-content">
-                  <Typography gutterBottom sx={{ color: "text.secondary", fontSize: 14 }}>
-                    Ticket ID: {ticket._id}
-                  </Typography>
-                  <Typography variant="h5" component="div">
-                    <span className="bold">Username: </span> {ticket.userName}
-                  </Typography>
-                  <Typography sx={{ color: "text.secondary", mb: 1.5 }}>
-                    <span className="bold">Department: </span>{ticket.department}
-                  </Typography>
-                  <Typography variant="body2" className="ticket-details">
-                    <span className="bold">Devices: </span> {ticket.device}
-                    <br />
-                    <span className="bold">Priority: </span> {ticket.priority}
-                    <br />
-                    <span className="bold">Status: </span> {ticket.status}
-                    <br />
-                    <span className="bold">Additional Info: </span>
-                    {ticket.additionalInfo[0]?.comment
-                      ? truncateComment(ticket.additionalInfo[0].comment)
-                      : "No comments"}
-                  </Typography>
-                </CardContent>
+                  <CardContent className="card-content">
+                    <Typography
+                      gutterBottom
+                      sx={{ color: "text.secondary", fontSize: 14 }}
+                    >
+                      Ticket ID: {ticket._id}
+                    </Typography>
+                    <Typography variant="h5" component="div">
+                      <span className="bold">Username: </span> {ticket.userName}
+                    </Typography>
+                    <Typography sx={{ color: "text.secondary", mb: 1.5 }}>
+                      <span className="bold">Department: </span>
+                      {ticket.department}
+                    </Typography>
+                    <Typography variant="body2" className="ticket-details">
+                      <span className="bold">Devices: </span> {ticket.device}
+                      <br />
+                      <span className="bold">Priority: </span> {ticket.priority}
+                      <br />
+                      <span className="bold">Status: </span> {ticket.status}
+                      <br />
+                      <span className="bold">Additional Info: </span>
+                      {ticket.additionalInfo[0]?.comment
+                        ? truncateComment(ticket.additionalInfo[0].comment)
+                        : "No comments"}
+                    </Typography>
+                  </CardContent>
                 </div>
                 <CardActions className="card-action">
-                  <Button className="details" size="small">Details</Button>
+                  <Button className="details" size="small">
+                    Details
+                  </Button>
                   <Button size="small">Update</Button>
                   <Button size="small">Delete</Button>
                 </CardActions>
