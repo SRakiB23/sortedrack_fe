@@ -2,7 +2,8 @@ import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { axiosSecure } from "../../../api/axios";
 import "./TicketDetails.scss";
-import { FormControl, Select, TextField, Button } from "@mui/material";
+import { FormControl, Select, TextField, Button, Rating } from "@mui/material";
+import StarIcon from '@mui/icons-material/Star';
 import Swal from "sweetalert2";
 import { FaCommentAlt, FaPlus, FaRegUserCircle } from "react-icons/fa";
 import {
@@ -85,8 +86,8 @@ const TicketDetails = () => {
       <div className="main-container">
         <div className="leftside">
           <div className="leftside-details">
-          <h2 className="ticket-details-h2">Ticket Details</h2>
-          <hr className=""/>
+            <h2 className="ticket-details-h2">Ticket Details</h2>
+            <hr className="" />
             <div className="leftside-content-first">
               <div className="titles">
                 <div className="icon-details">
@@ -117,105 +118,116 @@ const TicketDetails = () => {
                 </div>
               </div>
               <div className="info">
-                <div className="icon-details2">
-                  {ticket.userName}
-                </div>
-                <div className="icon-details2">
-                  {ticket.email}
-                </div>
-                <div className="icon-details2">
-                  {ticket.department}
-                </div>
-                <div className="icon-details2">
-                  {ticket.device}
-                </div>
+                <div className="icon-details2">{ticket.userName}</div>
+                <div className="icon-details2">{ticket.email}</div>
+                <div className="icon-details2">{ticket.department}</div>
+                <div className="icon-details2">{ticket.device}</div>
                 <div className="icon-details2">
                   {ticket.priority}
+                  <Rating
+                    name="priority-rating"
+                    value={
+                      ticket.priority === "High"
+                        ? 3
+                        : ticket.priority === "Medium"
+                        ? 2
+                        : ticket.priority === "Low"
+                        ? 1
+                        : 0 // In case no priority or unexpected value
+                    }
+                    readOnly
+                    size="small" // Makes the stars smaller
+                    max={3} // Show only 3 stars in total
+                    icon={<StarIcon fontSize="inherit" />} 
+                    emptyIcon={null} 
+                  />
                 </div>
-                <div className="icon-details2">
-                  {ticket.status}
-                </div>
+                <div className="icon-details2">{ticket.status}</div>
               </div>
-              <div>
-              </div>
+              <div></div>
             </div>
-
           </div>
           <div className="change-status-container1">
-          <div className="change-status-container">
-            <div className="change-status">
-              <MdOutlinePublishedWithChanges />
-              <p>Change Status</p>
+            <div className="change-status-container">
+              <div className="change-status">
+                <MdOutlinePublishedWithChanges />
+                <p>Change Status</p>
+              </div>
+              <div>
+                <FormControl fullWidth>
+                  <Select
+                    native
+                    name="status"
+                    value={status || ""}
+                    onChange={handleStatusChange}
+                    className="status-select"
+                  >
+                    <option value="">Change Status</option>
+                    <option value="In progress">In Progress</option>
+                    <option value="Solved">Solved</option>
+                    <option value="Rejected">Rejected</option>
+                  </Select>
+                </FormControl>
+              </div>
             </div>
-            <div>
-            <FormControl fullWidth>
-              <Select
-                native
-                name="status"
-                value={status || ""}
-                onChange={handleStatusChange}
-                className="status-select"
+            <div className="update-button">
+              <Button
+                variant="contained"
+                color="success"
+                onClick={handleSubmit}
+                style={{ width: "400px" }}
               >
-                <option value="">Change Status</option>
-                <option value="In progress">In Progress</option>
-                <option value="Solved">Solved</option>
-                <option value="Rejected">Rejected</option>
-              </Select>
-            </FormControl>
+                Update Ticket
+              </Button>
             </div>
-          </div>
-          <div className="update-button">
-            <Button
-              variant="contained"
-              color="success"
-              onClick={handleSubmit}
-              style={{ width: "400px" }}
-            >
-              Update Ticket
-            </Button>
-          </div>
           </div>
         </div>
         <div className="rightside">
-  <h2 className="comments">Comments</h2>
-  <hr />
-  <div className="comments-section">
-    {ticket.additionalInfo &&
-    Array.isArray(ticket.additionalInfo) &&
-    ticket.additionalInfo.length > 0 ? (
-      <div>
-        {ticket.additionalInfo.map((commentObj, index) => (
-          <div
-            key={commentObj._id || index}
-            className={`comment ${
-              commentObj.authorRole === "admin" ||
-              commentObj.authorRole === "superadmin"
-                ? "left"
-                : "right"
-            }`}
-          >
-            <p>{commentObj.comment}</p>
-            <small>{new Date(commentObj.date).toLocaleString()}</small>
+          <h2 className="comments">Comments</h2>
+          <hr />
+          <div className="comments-section">
+            {ticket.additionalInfo &&
+            Array.isArray(ticket.additionalInfo) &&
+            ticket.additionalInfo.length > 0 ? (
+              <div>
+                {ticket.additionalInfo.map((commentObj, index) => (
+                  <div
+                    key={commentObj._id || index}
+                    className={`comment ${
+                      commentObj.authorRole === "admin" ||
+                      commentObj.authorRole === "superadmin"
+                        ? "left"
+                        : "right"
+                    }`}
+                  >
+                    <p>{commentObj.comment}</p>
+                    <small>{new Date(commentObj.date).toLocaleString()}</small>
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <p>No comments available.</p>
+            )}
           </div>
-        ))}
-      </div>
-    ) : (
-      <p>No comments available.</p>
-    )}
-  </div>
 
-  {/* Add the textarea for new comments */}
-  <div className="comment-input">
-    <textarea
-      placeholder="Add a comment..."
-      rows="4"
-      style={{width:"720px"}}
-      className="comment-textarea"
-      // onChange={(e) => setNewComment(e.target.value)} // Handle the textarea input
-    />
-  </div>
-</div>
-
+          <TextField
+            fullWidth
+            multiline
+            rows={4}
+            label="Comment . . ."
+            value={comment}
+            onChange={handleCommentChange}
+            style={{ marginTop: "30px" }}
+          />
+          <Button
+            variant="contained"
+            color="secondary"
+            onClick={handleSubmit}
+            style={{ marginTop: "30px", width: "400px", marginLeft: "150px" }}
+          >
+            Add Comment
+          </Button>
+        </div>
       </div>
     </div>
   );

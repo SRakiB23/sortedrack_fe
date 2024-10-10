@@ -18,3 +18,30 @@
     font-weight: 700 !important;
     font-size: large;
 }
+
+.buttons{
+    display: flex;
+    justify-content: center;
+}
+
+.view-button{
+    background-color: transparent;
+    border: none;
+    font-size: 18px;
+    cursor: pointer;
+    padding: 4px;
+    margin-left: 20px;
+}
+
+.view-button:hover {
+    color: rgb(25, 155, 42);
+    font-size: 20px;
+}
+
+.change-button{
+    background-color: transparent;
+    border: none;
+    font-size: 18px;
+    cursor: pointer;
+    padding: 4px;
+}

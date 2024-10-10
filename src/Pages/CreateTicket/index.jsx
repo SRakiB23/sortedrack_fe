@@ -12,6 +12,8 @@ import {
 import Swal from "sweetalert2"; // Import SweetAlert2
 import { axiosSecure } from "../../../src/api/axios";
 import "./CreateTicket.scss";
+import { FaStar } from "react-icons/fa";
+
 
 const CreateTicket = () => {
   const [formData, setFormData] = useState({
@@ -57,9 +59,6 @@ const CreateTicket = () => {
       const response = await axiosSecure.post("/tickets", {
         ...formData,
       });
-      // console.log("Success:", response.data);
-
-      // Display SweetAlert success notification
       Swal.fire({
         title: "Ticket Created!",
         text: "Your ticket has been created successfully!.",
@@ -82,8 +81,8 @@ const CreateTicket = () => {
   };
 
   return (
-    <div>
-      <h2 className="createticket-header">Create Ticket</h2>
+    <div className="whole-container">
+      <h2 className="createticket-header">Create <span className="ticket">Ticket</span></h2>
       <Container className="create-ticket-form">
         <form onSubmit={onSubmit}>
           <Box display="flex" flexDirection="column" gap={2}>
@@ -158,29 +157,47 @@ const CreateTicket = () => {
               </FormControl>
 
               <FormControl fullWidth>
-                <InputLabel id="priority-label">Priority</InputLabel>
-                <Select
-                  labelId="priority-label"
-                  id="priority"
-                  name="priority"
-                  value={formData.priority || ""}
-                  onChange={handleChange}
-                  label="Priority"
-                >
-                  <MenuItem value="">
-                    <em>Select Priority</em>
-                  </MenuItem>
-                  <MenuItem value="High">
-                    High <span className="dot red"> </span>
-                  </MenuItem>
-                  <MenuItem value="Medium">
-                    Medium <span className="dot yellow"> </span>
-                  </MenuItem>
-                  <MenuItem value="Low">
-                    Low <span className="dot green"> </span>
-                  </MenuItem>
-                </Select>
-              </FormControl>
+  <InputLabel id="priority-label">Priority</InputLabel>
+  <Select
+    labelId="priority-label"
+    id="priority"
+    name="priority"
+    value={formData.priority || ""}
+    onChange={handleChange}
+    label="Priority Level"
+  >
+    <MenuItem value="">
+      <em>Select Priority</em>
+    </MenuItem>
+    
+    <MenuItem value="High">
+      High
+      <span className="priority-stars">
+        {[...Array(3)].map((_, i) => (
+          <FaStar key={i} style={{ color: "#FFD700" }} />
+        ))}
+      </span>
+    </MenuItem>
+
+    <MenuItem value="Medium">
+      Medium
+      <span className="priority-stars">
+        {[...Array(2)].map((_, i) => (
+          <FaStar key={i} style={{ color: "#FFD700" }} />
+        ))}
+      </span>
+    </MenuItem>
+
+    <MenuItem value="Low">
+      Low
+      <span className="priority-stars">
+        {[...Array(1)].map((_, i) => (
+          <FaStar key={i} style={{ color: "#FFD700" }} />
+        ))}
+      </span>
+    </MenuItem>
+  </Select>
+</FormControl>
             </Box>
 
             {/* Additional Info */}

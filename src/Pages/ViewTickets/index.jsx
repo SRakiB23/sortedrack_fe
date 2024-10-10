@@ -8,7 +8,10 @@ import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
 import { axiosSecure } from "../../../src/api/axios";
-import { Button, FormControl, Select, MenuItem } from "@mui/material";
+import { Button, FormControl, Select, MenuItem, Tooltip } from "@mui/material";
+import { FaEye } from "react-icons/fa6";
+import { FaExchangeAlt } from "react-icons/fa";
+
 import { useNavigate } from "react-router-dom"; // Import useNavigate for redirection
 
 const ViewTicket = () => {
@@ -144,12 +147,24 @@ const ViewTicket = () => {
                   </TableCell>
                   <TableCell align="center">{ticket.status}</TableCell>
                   <TableCell align="center">
-                    <Button
-                      variant="contained"
-                      onClick={() => handleViewDetails(ticket._id)}
-                    >
-                      View
-                    </Button>
+                    <div className="buttons">
+                      <Tooltip title="Change Status" arrow>
+                        <div
+                          className="change-button"
+                          onClick={() => handleViewDetails(ticket._id)}
+                        >
+                          <FaExchangeAlt />
+                        </div>
+                      </Tooltip>
+                      <Tooltip title="View" arrow>
+                        <div
+                          className="view-button"
+                          onClick={() => handleViewDetails(ticket._id)}
+                        >
+                          <FaEye />
+                        </div>
+                      </Tooltip>
+                    </div>
                   </TableCell>
                 </TableRow>
               ))}

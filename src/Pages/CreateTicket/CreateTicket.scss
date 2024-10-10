@@ -1,6 +1,23 @@
+.whole-container{
+  background-color: rgb(255, 255, 247);
+  width: 1000px;
+  margin: auto;
+  margin-top: 40px;
+  padding: 20px;
+  box-shadow: 4px 4px 12px rgba(88, 87, 87, 0.6), -4px 4px 12px rgba(72, 71, 71, 0.6);
+  border-radius: 4px;
+}
+
 .createticket-header{
   padding: 30px 20px 20px 50px;
+  text-align: center;
+  font-weight: 600;
 }
+
+.ticket{
+  color: rgb(56, 84, 227);
+}
+
 
 .create-ticket-form {
   width: 80%;
@@ -8,24 +25,10 @@
   padding: 20px;
 }
 
-.dot {
-  height: 10px;
-  width: 10px;
-  border-radius: 50%;
-  display: inline-block;
-  margin-left: 6px;
-}
-
-.red {
-  background-color: red;
-}
-
-.yellow {
-  background-color: rgb(206, 206, 25);
-}
-
-.green {
-  background-color: green;
+.priority-stars {
+  display: inline-flex;
+  margin-left: 8px;
+  vertical-align: middle;
 }
 
 
@@ -36,3 +39,5 @@
 .MuiButton-contained {
   margin-top: 16px;
 }
+
+
