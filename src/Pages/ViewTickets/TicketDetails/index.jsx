@@ -3,9 +3,14 @@ import { useParams } from "react-router-dom";
 import { axiosSecure } from "../../../api/axios";
 import "./TicketDetails.scss";
 import { FormControl, Select, TextField, Button, Rating } from "@mui/material";
-import StarIcon from '@mui/icons-material/Star';
+import StarIcon from "@mui/icons-material/Star";
 import Swal from "sweetalert2";
-import { FaCommentAlt, FaPlus, FaRegUserCircle } from "react-icons/fa";
+import {
+  FaCommentAlt,
+  FaComments,
+  FaPlus,
+  FaRegUserCircle,
+} from "react-icons/fa";
 import {
   MdDevices,
   MdEmail,
@@ -14,6 +19,7 @@ import {
 import { HiOutlineBuildingOffice2 } from "react-icons/hi2";
 import { FcHighPriority } from "react-icons/fc";
 import { GrStatusUnknown } from "react-icons/gr";
+import { IoTicket } from "react-icons/io5";
 
 const TicketDetails = () => {
   const { id } = useParams();
@@ -35,47 +41,111 @@ const TicketDetails = () => {
     fetchTicketDetails();
   }, [id]);
 
+  // Handle status change
   const handleStatusChange = (event) => {
     setStatus(event.target.value);
   };
 
+  // Handle comment change
   const handleCommentChange = (event) => {
     setComment(event.target.value);
   };
 
-  const handleSubmit = async () => {
+  // Handle status update
+  const handleStatusSubmit = async () => {
     try {
       const response = await axiosSecure.put(`/tickets/${id}`, {
         status,
-        comment,
-        author: "",
-        email: "",
       });
 
-      console.log("Ticket updated successfully:", response.data);
+      console.log("Status updated successfully:", response.data);
       setTicket(response.data);
-      setComment("");
 
       Swal.fire({
-        title: "Ticket Updated!",
-        text: "Your ticket has been updated successfully!",
+        title: "Status Updated!",
+        text: "Ticket status has been updated successfully!",
         icon: "success",
         confirmButtonColor: "#3085d6",
         confirmButtonText: "OK",
       });
     } catch (error) {
-      console.error("Error updating ticket:", error);
+      console.error("Error updating status:", error);
 
-      // Optionally, you can show an error alert if needed
       Swal.fire({
         title: "Error!",
-        text: "There was an error updating the ticket.",
+        text: "There was an error updating the ticket status.",
         icon: "error",
         confirmButtonColor: "#d33",
         confirmButtonText: "OK",
       });
     }
   };
+
+  // Handle comment update
+// Handle comment update
+const handleCommentSubmit = async () => {
+  if (!comment.trim()) {
+    Swal.fire({
+      title: "Error!",
+      text: "Comment is required to update the ticket.",
+      icon: "warning",
+      confirmButtonColor: "#d33",
+      confirmButtonText: "OK",
+    });
+    return;
+  }
+
+  // Get the logged-in user's username (e.g., from localStorage or session)
+  const loggedInUser = JSON.parse(localStorage.getItem("userDetails"));
+  const loggedInUserName = loggedInUser?.userName; // Ensure this gets the correct logged-in user's name
+
+  if (!loggedInUserName) {
+    Swal.fire({
+      title: "Error!",
+      text: "User is not logged in!",
+      icon: "error",
+      confirmButtonColor: "#d33",
+      confirmButtonText: "OK",
+    });
+    return;
+  }
+
+  // Add the new comment object to the existing additionalInfo array
+  const newComment = {
+    comment: comment,
+    date: new Date(),
+    userName: loggedInUserName, // Use the logged-in user's name, not the ticket creator's
+  };
+
+  try {
+    const response = await axiosSecure.put(`/tickets/${id}`, {
+      additionalInfo: [...ticket.additionalInfo, newComment], // Append the new comment to the existing additionalInfo array
+    });
+
+    console.log("Comment added successfully:", response.data);
+    setTicket(response.data); // Update the ticket with the new data
+    setComment(""); // Clear the comment field
+
+    Swal.fire({
+      title: "Comment Added!",
+      text: "Your comment has been added successfully!",
+      icon: "success",
+      confirmButtonColor: "#3085d6",
+      confirmButtonText: "OK",
+    });
+  } catch (error) {
+    console.error("Error adding comment:", error);
+
+    Swal.fire({
+      title: "Error!",
+      text: "There was an error adding the comment.",
+      icon: "error",
+      confirmButtonColor: "#d33",
+      confirmButtonText: "OK",
+    });
+  }
+};
+
 
   if (!ticket) {
     return <div>Loading...</div>;
@@ -86,7 +156,12 @@ const TicketDetails = () => {
       <div className="main-container">
         <div className="leftside">
           <div className="leftside-details">
-            <h2 className="ticket-details-h2">Ticket Details</h2>
+            <h2 className="ticket-details-h2">
+              <span className="ticketIcon">
+                <IoTicket />
+              </span>
+              Ticket Details
+            </h2>
             <hr className="" />
             <div className="leftside-content-first">
               <div className="titles">
@@ -138,13 +213,12 @@ const TicketDetails = () => {
                     readOnly
                     size="small" // Makes the stars smaller
                     max={3} // Show only 3 stars in total
-                    icon={<StarIcon fontSize="inherit" />} 
-                    emptyIcon={null} 
+                    icon={<StarIcon fontSize="inherit" />}
+                    emptyIcon={null}
                   />
                 </div>
                 <div className="icon-details2">{ticket.status}</div>
               </div>
-              <div></div>
             </div>
           </div>
           <div className="change-status-container1">
@@ -174,7 +248,7 @@ const TicketDetails = () => {
               <Button
                 variant="contained"
                 color="success"
-                onClick={handleSubmit}
+                onClick={handleStatusSubmit}
                 style={{ width: "400px" }}
               >
                 Update Ticket
@@ -183,7 +257,12 @@ const TicketDetails = () => {
           </div>
         </div>
         <div className="rightside">
-          <h2 className="comments">Comments</h2>
+          <h2 className="comments">
+            <span className="ticketIcon">
+              <FaComments />
+            </span>
+            Comments
+          </h2>
           <hr />
           <div className="comments-section">
             {ticket.additionalInfo &&
@@ -201,6 +280,7 @@ const TicketDetails = () => {
                     }`}
                   >
                     <p>{commentObj.comment}</p>
+                    <small>{commentObj.userName}</small>
                     <small>{new Date(commentObj.date).toLocaleString()}</small>
                   </div>
                 ))}
@@ -217,13 +297,28 @@ const TicketDetails = () => {
             label="Comment . . ."
             value={comment}
             onChange={handleCommentChange}
-            style={{ marginTop: "30px" }}
+            variant="outlined" // Ensure you are using the outlined variant
+            sx={{
+              marginTop: "38px",
+              "& .MuiOutlinedInput-root": {
+                borderRadius: "8px", // Apply border radius to the input wrapper
+              },
+            }}
           />
+
           <Button
             variant="contained"
-            color="secondary"
-            onClick={handleSubmit}
-            style={{ marginTop: "30px", width: "400px", marginLeft: "150px" }}
+            onClick={handleCommentSubmit}
+            sx={{
+              marginTop: "40px",
+              width: "400px",
+              marginLeft: "150px",
+              backgroundColor: "rgb(229, 211, 53,1)", // Custom background color
+              color: "black", // Custom text color
+              "&:hover": {
+                backgroundColor: "rgba(235, 219, 36, 0.8)", // Optional hover effect
+              },
+            }}
           >
             Add Comment
           </Button>

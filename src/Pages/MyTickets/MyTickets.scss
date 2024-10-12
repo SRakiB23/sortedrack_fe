@@ -1,12 +1,15 @@
 .mytickets-h2{
-    padding: 30px 20px 20px 50px;
+    text-align: center;
+    padding: 30px 2px 10px 2px;
+    font-size: 32px;
+    font-weight: 600;
 }
 
 .my-tickets-container {
     padding: 50px;
     display: flex;
     flex-wrap: wrap;
-    gap: 10px;
+    gap: 24px;
   }
   
   .my-ticket-card {
@@ -14,12 +17,15 @@
   }
 
   .card{
-    height: 300px;
+    height: 344px;
+    border-radius: 12px !important;
+    box-shadow: 1px 6px 4px rgba(0, 0, 0, 0.2);
+    background-color: #f9e7cc !important;
   }
 
   .card-action{
-    margin-left: 34px;
-    margin-top: 20px;
+    margin: 20px 10px 5px 70px;
+    gap: 8px;
   }
 
   .bold{
@@ -27,10 +33,81 @@
   }
 
   .card-content{
-    height: 220px;
+    height: 270px;
   }
 
-  .details{
-    
+  .details-title{
+    font-size: 16px;
+    font-weight: 500;
   }
   
+
+  .icon-details2{
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    font-size: medium;
+    font-weight: 300;
+    padding: 10px 0px 9px 0px;
+}
+
+.detailsbtn{
+  font-size: 24px !important;
+  color: rgb(75, 174, 207) !important;
+}
+
+.detailsbtn:hover{
+  color: white !important;
+  background-color: rgb(78, 177, 210);
+}
+
+.updatebtn{
+  font-size: 24px !important;
+  color: rgb(152, 199, 64) !important;
+  text-align: center !important;
+}
+
+.updatebtn:hover{
+  color: white !important;
+  background-color: rgb(147, 185, 76);
+}
+
+.deletebtn{
+  font-size: 24px !important;
+  color: red !important;
+}
+
+.deletebtn:hover{
+  color: white !important;
+  background-color: rgb(203, 58, 51);
+}
+
+.ticketdetails{
+  font-size: 26px !important; 
+  font-weight: 600 !important;
+  text-align: center;
+  padding-bottom: 6px;
+}
+
+.drawerDetails{
+  font-size: 18px !important;
+}
+
+.additional-info-list {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  overflow-y: auto;
+  height: 200px;
+  background-color: #fcf9f3;
+  padding: 10px;
+  border-radius: 8px;
+}
+
+.additional-info-list p{
+  background-color: #f4ebdd;
+  padding: 6px 3px 2px 10px;
+  border-radius: 8px;
+  min-height: 60px;
+  box-shadow: 2px 2px 2px solid rgba(255, 255, 255, 0.2);
+}

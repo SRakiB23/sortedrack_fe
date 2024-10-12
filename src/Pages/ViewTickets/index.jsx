@@ -1,23 +1,65 @@
 import React, { useEffect, useState } from "react";
 import "./ViewTicket.scss";
+import { styled } from "@mui/material/styles"; // Import for styling
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
-import TableCell from "@mui/material/TableCell";
+import TableCell, { tableCellClasses } from "@mui/material/TableCell";
 import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
+import TablePagination from "@mui/material/TablePagination"; // Import for pagination
 import { axiosSecure } from "../../../src/api/axios";
-import { Button, FormControl, Select, MenuItem, Tooltip } from "@mui/material";
+import { FormControl, Select, MenuItem, Tooltip, Modal, Box, Typography, Button } from "@mui/material";
 import { FaEye } from "react-icons/fa6";
 import { FaExchangeAlt } from "react-icons/fa";
+import { useNavigate } from "react-router-dom";
 
-import { useNavigate } from "react-router-dom"; // Import useNavigate for redirection
+// Styled components for the table
+const StyledTableCell = styled(TableCell)(({ theme }) => ({
+  [`&.${tableCellClasses.head}`]: {
+    backgroundColor: "#6bbcc8",
+    color: "#2b0c37",
+    fontSize: 16,
+    fontWeight: "bold",
+  },
+  [`&.${tableCellClasses.body}`]: {
+    fontSize: 14,
+  },
+}));
+
+const StyledTableRow = styled(TableRow)(({ theme }) => ({
+  '&:nth-of-type(odd)': {
+    backgroundColor: theme.palette.action.hover,
+  },
+  // hide last border
+  '&:last-child td, &:last-child th': {
+    border: 0,
+  },
+}));
+
+// Modal styles
+const modalStyle = {
+  position: "absolute",
+  top: "50%",
+  left: "50%",
+  transform: "translate(-50%, -50%)",
+  width: 400,
+  bgcolor: "background.paper",
+  boxShadow: 24,
+  p: 4,
+};
 
 const ViewTicket = () => {
   const [tickets, setTickets] = useState([]);
   const [sortPriority, setSortPriority] = useState("");
   const [sortStatus, setSortStatus] = useState("");
+  const [page, setPage] = useState(0); // Pagination page state
+  const [rowsPerPage, setRowsPerPage] = useState(10); // Rows per page state
+  const [open, setOpen] = useState(false); // Modal open/close state
+  const [selectedTicket, setSelectedTicket] = useState(null); // Current selected ticket for status change
+  const [newStatus, setNewStatus] = useState(""); // Selected status for modal
+
   const navigate = useNavigate(); // Initialize useNavigate
 
   useEffect(() => {
@@ -43,6 +85,46 @@ const ViewTicket = () => {
     setSortStatus(event.target.value);
   };
 
+  // Handle pagination page change
+  const handleChangePage = (event, newPage) => {
+    setPage(newPage);
+  };
+
+  // Handle change in rows per page
+  const handleChangeRowsPerPage = (event) => {
+    setRowsPerPage(parseInt(event.target.value, 10));
+    setPage(0);
+  };
+
+  // Handle modal open and store the selected ticket
+  const handleOpenModal = (ticket) => {
+    setSelectedTicket(ticket);
+    setNewStatus(ticket.status); // Set current status in modal
+    setOpen(true);
+  };
+
+  // Handle modal close
+  const handleCloseModal = () => {
+    setOpen(false);
+  };
+
+  // Handle status update from modal
+  const handleUpdateStatus = async () => {
+    if (selectedTicket) {
+      try {
+        await axiosSecure.put(`/tickets/${selectedTicket._id}`, { status: newStatus });
+        setTickets((prevTickets) =>
+          prevTickets.map((ticket) =>
+            ticket._id === selectedTicket._id ? { ...ticket, status: newStatus } : ticket
+          )
+        );
+        handleCloseModal();
+      } catch (error) {
+        console.error("Error updating ticket status:", error);
+      }
+    }
+  };
+
   // Sort tickets based on selected criteria
   const sortedTickets = tickets
     .filter((ticket) => {
@@ -61,6 +143,12 @@ const ViewTicket = () => {
       return 0;
     });
 
+  // Paginate the sorted tickets
+  const paginatedTickets = sortedTickets.slice(
+    page * rowsPerPage,
+    page * rowsPerPage + rowsPerPage
+  );
+
   const handleViewDetails = (ticketId) => {
     // Redirect to the ticket details page with the ticket's ID
     navigate(`/tickets/${ticketId}`);
@@ -68,7 +156,7 @@ const ViewTicket = () => {
 
   return (
     <div>
-      <h2 className="ticket-header">All Tickets</h2>
+      <h2 className="ticket-header">All <span style={{color:"#6bbcc8"}}>Tickets</span></h2>
 
       {/* Sorting Selectors */}
       <div
@@ -113,45 +201,42 @@ const ViewTicket = () => {
 
       <div className="all-ticket-container">
         <TableContainer component={Paper}>
-          <Table sx={{ minWidth: 650 }} aria-label="simple table">
-            <TableHead className="table-header">
-              <TableRow className="table-row">
-                <TableCell align="center">User Name</TableCell>
-                <TableCell align="center">Department</TableCell>
-                <TableCell align="center">Device</TableCell>
-                <TableCell align="center">Priority</TableCell>
-                <TableCell align="center">Additional Info</TableCell>
-                <TableCell align="center">Status</TableCell>
-                <TableCell align="center">Action</TableCell>
+          <Table sx={{ minWidth: 700 }} aria-label="customized table">
+            <TableHead>
+              <TableRow>
+                <StyledTableCell align="center">User Name</StyledTableCell>
+                <StyledTableCell align="center">Department</StyledTableCell>
+                <StyledTableCell align="center">Device</StyledTableCell>
+                <StyledTableCell align="center">Priority</StyledTableCell>
+                <StyledTableCell align="center">Additional Info</StyledTableCell>
+                <StyledTableCell align="center">Status</StyledTableCell>
+                <StyledTableCell align="center">Action</StyledTableCell>
               </TableRow>
             </TableHead>
             <TableBody>
-              {sortedTickets.map((ticket) => (
-                <TableRow
-                  key={ticket._id}
-                  sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
-                >
-                  <TableCell component="th" scope="row" align="center">
+              {paginatedTickets.map((ticket) => (
+                <StyledTableRow key={ticket._id}>
+                  <StyledTableCell component="th" scope="row" align="center">
                     {ticket.userName}
-                  </TableCell>
-                  <TableCell align="center">{ticket.department}</TableCell>
-                  <TableCell align="center">{ticket.device}</TableCell>
-                  <TableCell align="center">{ticket.priority}</TableCell>
-                  <TableCell align="center">
+                  </StyledTableCell>
+                  <StyledTableCell align="center">{ticket.department}</StyledTableCell>
+                  <StyledTableCell align="center">{ticket.device}</StyledTableCell>
+                  <StyledTableCell align="center">{ticket.priority}</StyledTableCell>
+                  <StyledTableCell align="center">
                     {Array.isArray(ticket.additionalInfo) &&
                     ticket.additionalInfo.length > 0
                       ? ticket.additionalInfo[0]?.comment?.length > 30
                         ? `${ticket.additionalInfo[0].comment.slice(0, 30)}...`
                         : ticket.additionalInfo[0].comment
                       : "No comments available"}
-                  </TableCell>
-                  <TableCell align="center">{ticket.status}</TableCell>
-                  <TableCell align="center">
+                  </StyledTableCell>
+                  <StyledTableCell align="center">{ticket.status}</StyledTableCell>
+                  <StyledTableCell align="center">
                     <div className="buttons">
                       <Tooltip title="Change Status" arrow>
                         <div
                           className="change-button"
-                          onClick={() => handleViewDetails(ticket._id)}
+                          onClick={() => handleOpenModal(ticket)}
                         >
                           <FaExchangeAlt />
                         </div>
@@ -165,13 +250,52 @@ const ViewTicket = () => {
                         </div>
                       </Tooltip>
                     </div>
-                  </TableCell>
-                </TableRow>
+                  </StyledTableCell>
+                </StyledTableRow>
               ))}
             </TableBody>
           </Table>
+          {/* Pagination */}
+          <TablePagination
+            rowsPerPageOptions={[10, 50]}
+            component="div"
+            count={sortedTickets.length}
+            rowsPerPage={rowsPerPage}
+            page={page}
+            onPageChange={handleChangePage}
+            onRowsPerPageChange={handleChangeRowsPerPage}
+          />
         </TableContainer>
       </div>
+
+      {/* Modal for changing ticket status */}
+      <Modal open={open} onClose={handleCloseModal} aria-labelledby="status-modal">
+  <Box sx={modalStyle}>
+    <Typography id="status-modal" variant="h6" component="h2" className="modal-header">
+      Change Ticket Status
+    </Typography>
+    {selectedTicket && ( // Ensure selectedTicket is defined
+      <p style={{paddingTop:"20px"}}>Current Status:
+       <span style={{paddingLeft:"10px", color:"#039eb9"}}>{selectedTicket.status}</span></p>
+    )}
+    <FormControl fullWidth margin="normal">
+      <Select
+        value={newStatus}
+        onChange={(e) => setNewStatus(e.target.value)}
+      >
+        <MenuItem value="Pending">Pending</MenuItem>
+        <MenuItem value="In progress">In progress</MenuItem>
+        <MenuItem value="Solved">Solved</MenuItem>
+        <MenuItem value="Rejected">Rejected</MenuItem>
+      </Select>
+    </FormControl>
+    <Button onClick={handleUpdateStatus} variant="contained" 
+    style={{backgroundColor:"#039eb9"}}>
+      Update Status
+    </Button>
+  </Box>
+</Modal>
+
     </div>
   );
 };
