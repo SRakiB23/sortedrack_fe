@@ -4,7 +4,7 @@ import { NavLink } from "react-router-dom";
 import { SidebarContext } from "../../../contexts/SidebarContext";
 import logo from "../../../assests/images/sorted-rack-logo.svg";
 import { IoCreateOutline, IoTicketOutline } from "react-icons/io5";
-import { MdPreview } from "react-icons/md";
+import { MdAssignmentInd, MdPreview } from "react-icons/md";
 import { getUserDetails } from "../../../service"; // Importing getUserDetails to get the role
 
 import "./Sidebar.scss";
@@ -53,6 +53,17 @@ const Sidebar = () => {
                   >
                     <IoTicketOutline className="fs-5 me-2" />
                     <span>My Tickets</span>
+                  </NavLink>
+                </li>
+                <li>
+                  <NavLink
+                    to="/assigndevices"
+                    className={({ isActive }) =>
+                      `nav-link text-white ${isActive ? "active" : undefined}`
+                    }
+                  >
+                    <MdAssignmentInd className="fs-5 me-2" />
+                    <span>Assigned Devices</span>
                   </NavLink>
                 </li>
               </>

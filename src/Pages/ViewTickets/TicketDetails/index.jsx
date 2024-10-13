@@ -327,10 +327,10 @@ const TicketDetails = () => {
                 marginTop: "40px",
                 width: "400px",
                 marginLeft: "70px",
-                backgroundColor: "rgb(229, 211, 53,1)",
-                color: "black", // Custom text color
+                backgroundColor: "rgb(107, 188, 200)",
+                color: "white", // Custom text color
                 "&:hover": {
-                  backgroundColor: "rgba(235, 219, 36, 0.8)", // Optional hover effect
+                  backgroundColor: "rgb(109, 190, 195)", // Optional hover effect
                 },
               }}
             >

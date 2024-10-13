@@ -126,6 +126,7 @@ const CreateTicket = () => {
                   labelId="department-label"
                   id="department"
                   name="department"
+                  required
                   value={formData.department || ""}
                   onChange={handleChange}
                   label="Department"
@@ -150,6 +151,7 @@ const CreateTicket = () => {
                   labelId="device-label"
                   id="device"
                   name="device"
+                  required
                   value={formData.device || ""}
                   onChange={handleChange}
                   label="Device"
@@ -173,6 +175,7 @@ const CreateTicket = () => {
                 <Select
                   labelId="priority-label"
                   id="priority"
+                  required
                   name="priority"
                   value={formData.priority || ""}
                   onChange={handleChange}
@@ -215,6 +218,7 @@ const CreateTicket = () => {
                 <TextField
                   label="Additional Info"
                   name="additionalInfo"
+                  required
                   value={
                     formData.additionalInfo.length
                       ? formData.additionalInfo[0].comment

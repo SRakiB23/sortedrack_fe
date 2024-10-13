@@ -21,6 +21,7 @@ import CreateTicket from "./Pages/CreateTicket";
 import ViewTicket from "./Pages/ViewTickets";
 import TicketDetails from "./Pages/ViewTickets/TicketDetails";
 import MyTickets from "./Pages/MyTickets";
+import AssignedDevices from "./Pages/AssignedDevices";
 
 function App() {
   return (
@@ -41,6 +42,7 @@ function App() {
           <Route path="/viewTicket" element={<ViewTicket />} />
           <Route path="/tickets/:id" element={<TicketDetails />} />
           <Route path="/myTickets" element={<MyTickets />} />
+          <Route path="/assigndevices" element={<AssignedDevices />} />
         </Route>
 
         <Route path="login" element={<LoginForm />} />

@@ -32,7 +32,7 @@
   
   .comment {
     max-width: 100%;
-    padding: 10px 10px 8px 6px;
+    padding: 12px 10px 6px 14px;
     border-radius: 10px;
     margin: 6px 2px 2px 18px;
     
@@ -45,7 +45,7 @@
   
   .comment.right {
     align-self: flex-end;
-    background-color: #f5f7e7;
+    background-color: rgb(196, 224, 229);
     box-shadow: 2px 2px 4px rgba(0,0,0,0.3)
   }
   
@@ -197,6 +197,6 @@
 .comments{
     font-weight: 600;
     padding: 6px 4px 6px 10px;
-    border-left: 8px solid rgb(235, 219, 36);
+    border-left: 8px solid rgb(107, 188, 200);
 }
 

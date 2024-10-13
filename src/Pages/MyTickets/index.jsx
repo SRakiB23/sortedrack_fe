@@ -176,7 +176,7 @@ const MyTickets = () => {
   return (
     <div>
       <h2 className="mytickets-h2">
-        My <span style={{ color: "#e58800" }}>Tickets</span>
+        My <span style={{ color: "#82b440" }}>Tickets</span>
       </h2>
       <div className="my-tickets-container">
         {myTickets.length > 0 ? (
