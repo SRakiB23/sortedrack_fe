@@ -13,18 +13,18 @@
   }
   
   .my-ticket-card {
-    width: 300px;
+    width: 320px;
   }
 
   .card{
-    height: 344px;
+    height: 314px;
     border-radius: 12px !important;
     box-shadow: 1px 6px 4px rgba(0, 0, 0, 0.2);
     background-color: #f9e7cc !important;
   }
 
   .card-action{
-    margin: 20px 10px 5px 70px;
+    margin:2px 10px 2px 46px;
     gap: 8px;
   }
 
@@ -33,7 +33,7 @@
   }
 
   .card-content{
-    height: 270px;
+    height: 260px;
   }
 
   .details-title{
@@ -86,7 +86,7 @@
   font-size: 26px !important; 
   font-weight: 600 !important;
   text-align: center;
-  padding-bottom: 6px;
+  padding-bottom: 10px;
 }
 
 .drawerDetails{
@@ -110,4 +110,42 @@
   border-radius: 8px;
   min-height: 60px;
   box-shadow: 2px 2px 2px solid rgba(255, 255, 255, 0.2);
+}
+
+.commentarea{
+  display: flex;
+  flex-direction: column;
+  width: 440px;
+  overflow-y: auto;
+  max-height: 360px;
+  background-color: #fcf9f3;
+  padding: 10px;
+  border-radius: 8px;
+}
+
+.commentarea p{
+  background-color: #f4ebdd;
+  padding: 6px 3px 2px 10px;
+  border-radius: 8px;
+  min-height: 60px;
+  box-shadow: 2px 2px 2px solid rgba(255, 255, 255, 0.2);
+}
+
+.ticket-info {
+  display: flex;
+  justify-content: space-between;
+}
+
+.details-titles {
+  margin-right: 16px; /* Add spacing between titles and values */
+}
+
+.details-title {
+  font-weight: bold;
+  color: #555;
+  margin-bottom: 8px; /* Adjust spacing between each title */
+}
+
+.details-values p {
+  margin-bottom: 8px; /* Align with the spacing of titles */
 }

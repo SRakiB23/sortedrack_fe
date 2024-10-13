@@ -53,13 +53,27 @@ const TicketDetails = () => {
 
   // Handle status update
   const handleStatusSubmit = async () => {
-    try {
-      const response = await axiosSecure.put(`/tickets/${id}`, {
-        status,
+    if (!status) {
+      Swal.fire({
+        title: "Error!",
+        text: "Please select a status to update.",
+        icon: "warning",
+        confirmButtonColor: "#d33",
+        confirmButtonText: "OK",
       });
+      return;
+    }
 
+    // Create payload to include both status and additionalInfo
+    const payload = {
+      status,
+      additionalInfo: ticket.additionalInfo, // Keep existing comments
+    };
+
+    try {
+      const response = await axiosSecure.put(`/tickets/${id}`, payload);
       console.log("Status updated successfully:", response.data);
-      setTicket(response.data);
+      setTicket(response.data); // Update the ticket state with the new data
 
       Swal.fire({
         title: "Status Updated!",
@@ -70,7 +84,6 @@ const TicketDetails = () => {
       });
     } catch (error) {
       console.error("Error updating status:", error);
-
       Swal.fire({
         title: "Error!",
         text: "There was an error updating the ticket status.",
@@ -81,71 +94,67 @@ const TicketDetails = () => {
     }
   };
 
-  // Handle comment update
-// Handle comment update
-const handleCommentSubmit = async () => {
-  if (!comment.trim()) {
-    Swal.fire({
-      title: "Error!",
-      text: "Comment is required to update the ticket.",
-      icon: "warning",
-      confirmButtonColor: "#d33",
-      confirmButtonText: "OK",
-    });
-    return;
-  }
+  const handleCommentSubmit = async () => {
+    if (!comment.trim()) {
+      Swal.fire({
+        title: "Error!",
+        text: "Comment is required to update the ticket.",
+        icon: "warning",
+        confirmButtonColor: "#d33",
+        confirmButtonText: "OK",
+      });
+      return;
+    }
 
-  // Get the logged-in user's username (e.g., from localStorage or session)
-  const loggedInUser = JSON.parse(localStorage.getItem("userDetails"));
-  const loggedInUserName = loggedInUser?.userName; // Ensure this gets the correct logged-in user's name
+    const loggedInUser = JSON.parse(localStorage.getItem("userDetails"));
+    const loggedInUserName = loggedInUser?.userName;
 
-  if (!loggedInUserName) {
-    Swal.fire({
-      title: "Error!",
-      text: "User is not logged in!",
-      icon: "error",
-      confirmButtonColor: "#d33",
-      confirmButtonText: "OK",
-    });
-    return;
-  }
+    if (!loggedInUserName) {
+      Swal.fire({
+        title: "Error!",
+        text: "User is not logged in!",
+        icon: "error",
+        confirmButtonColor: "#d33",
+        confirmButtonText: "OK",
+      });
+      return;
+    }
 
-  // Add the new comment object to the existing additionalInfo array
-  const newComment = {
-    comment: comment,
-    date: new Date(),
-    userName: loggedInUserName, // Use the logged-in user's name, not the ticket creator's
+    const newComment = {
+      comment: comment,
+      date: new Date(),
+      userName: loggedInUserName,
+    };
+
+    try {
+      const payload = {
+        status: ticket.status, // Keep current status
+        additionalInfo: [...ticket.additionalInfo, newComment], // Add new comment
+      };
+
+      const response = await axiosSecure.put(`/tickets/${id}`, payload);
+      console.log("Comment added successfully:", response.data);
+      setTicket(response.data); // Update the ticket with the new data
+      setComment(""); // Clear the comment field
+
+      Swal.fire({
+        title: "Comment Added!",
+        text: "Your comment has been added successfully!",
+        icon: "success",
+        confirmButtonColor: "#3085d6",
+        confirmButtonText: "OK",
+      });
+    } catch (error) {
+      console.error("Error adding comment:", error);
+      Swal.fire({
+        title: "Error!",
+        text: "There was an error adding the comment.",
+        icon: "error",
+        confirmButtonColor: "#d33",
+        confirmButtonText: "OK",
+      });
+    }
   };
-
-  try {
-    const response = await axiosSecure.put(`/tickets/${id}`, {
-      additionalInfo: [...ticket.additionalInfo, newComment], // Append the new comment to the existing additionalInfo array
-    });
-
-    console.log("Comment added successfully:", response.data);
-    setTicket(response.data); // Update the ticket with the new data
-    setComment(""); // Clear the comment field
-
-    Swal.fire({
-      title: "Comment Added!",
-      text: "Your comment has been added successfully!",
-      icon: "success",
-      confirmButtonColor: "#3085d6",
-      confirmButtonText: "OK",
-    });
-  } catch (error) {
-    console.error("Error adding comment:", error);
-
-    Swal.fire({
-      title: "Error!",
-      text: "There was an error adding the comment.",
-      icon: "error",
-      confirmButtonColor: "#d33",
-      confirmButtonText: "OK",
-    });
-  }
-};
-
 
   if (!ticket) {
     return <div>Loading...</div>;
@@ -162,7 +171,7 @@ const handleCommentSubmit = async () => {
               </span>
               Ticket Details
             </h2>
-            <hr className="" />
+            <hr />
             <div className="leftside-content-first">
               <div className="titles">
                 <div className="icon-details">
@@ -208,11 +217,11 @@ const handleCommentSubmit = async () => {
                         ? 2
                         : ticket.priority === "Low"
                         ? 1
-                        : 0 // In case no priority or unexpected value
+                        : 0
                     }
                     readOnly
-                    size="small" // Makes the stars smaller
-                    max={3} // Show only 3 stars in total
+                    size="small"
+                    max={3}
                     icon={<StarIcon fontSize="inherit" />}
                     emptyIcon={null}
                   />
@@ -279,9 +288,15 @@ const handleCommentSubmit = async () => {
                         : "right"
                     }`}
                   >
-                    <p>{commentObj.comment}</p>
-                    <small>{commentObj.userName}</small>
-                    <small>{new Date(commentObj.date).toLocaleString()}</small>
+                    <p>
+                      <span className="comment-author">
+                        {commentObj.userName}
+                      </span>
+                      : {commentObj.comment}
+                    </p>
+                    <p className="comment-date">
+                      {new Date(commentObj.date).toLocaleString()}
+                    </p>
                   </div>
                 ))}
               </div>
@@ -289,39 +304,39 @@ const handleCommentSubmit = async () => {
               <p>No comments available.</p>
             )}
           </div>
-
-          <TextField
-            fullWidth
-            multiline
-            rows={4}
-            label="Comment . . ."
-            value={comment}
-            onChange={handleCommentChange}
-            variant="outlined" // Ensure you are using the outlined variant
-            sx={{
-              marginTop: "38px",
-              "& .MuiOutlinedInput-root": {
-                borderRadius: "8px", // Apply border radius to the input wrapper
-              },
-            }}
-          />
-
-          <Button
-            variant="contained"
-            onClick={handleCommentSubmit}
-            sx={{
-              marginTop: "40px",
-              width: "400px",
-              marginLeft: "150px",
-              backgroundColor: "rgb(229, 211, 53,1)", // Custom background color
-              color: "black", // Custom text color
-              "&:hover": {
-                backgroundColor: "rgba(235, 219, 36, 0.8)", // Optional hover effect
-              },
-            }}
-          >
-            Add Comment
-          </Button>
+          <div className="add-comment-container">
+            <TextField
+              fullWidth
+              multiline
+              rows={4}
+              label="Comment . . ."
+              value={comment}
+              onChange={handleCommentChange}
+              variant="outlined"
+              sx={{
+                marginTop: "38px",
+                "& .MuiOutlinedInput-root": {
+                  borderRadius: "8px",
+                },
+              }}
+            />
+            <Button
+              variant="contained"
+              onClick={handleCommentSubmit}
+              sx={{
+                marginTop: "40px",
+                width: "400px",
+                marginLeft: "70px",
+                backgroundColor: "rgb(229, 211, 53,1)",
+                color: "black", // Custom text color
+                "&:hover": {
+                  backgroundColor: "rgba(235, 219, 36, 0.8)", // Optional hover effect
+                },
+              }}
+            >
+              Add Comment
+            </Button>
+          </div>
         </div>
       </div>
     </div>

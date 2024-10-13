@@ -11,7 +11,7 @@ const Layout = () => {
 
   useEffect(() => {
     if(role === 'user') {
-      navigate("/myTickets")
+      navigate("/createTicket")
     }
     // if(role === 'superadmin') {
     //   navigate("/viewTi");

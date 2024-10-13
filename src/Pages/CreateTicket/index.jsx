@@ -54,19 +54,20 @@ const CreateTicket = () => {
         {
           comment: value,
           date: new Date(),
-          userName: prevData.userName || JSON.parse(localStorage.getItem("userDetails")).userName, // Ensure userName is retrieved correctly
+          userName:
+            prevData.userName ||
+            JSON.parse(localStorage.getItem("userDetails")).userName, // Ensure userName is retrieved correctly
         },
       ],
     }));
   };
-  
 
   const onSubmit = async (e) => {
     e.preventDefault();
     try {
       const response = await axiosSecure.post("/tickets", {
         ...formData,
-        author:formData.userId,
+        author: formData.userId,
       });
       Swal.fire({
         title: "Ticket Created!",
@@ -232,9 +233,9 @@ const CreateTicket = () => {
             <Box>
               <Button
                 variant="contained"
-                color="primary"
                 type="submit"
                 fullWidth
+                className="submitbtn"
               >
                 Submit
               </Button>

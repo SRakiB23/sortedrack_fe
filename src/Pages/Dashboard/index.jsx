@@ -10,8 +10,7 @@ const Dashboard = () => {
     const userDetails = localStorage.userDetails && JSON.parse(localStorage.userDetails);
 
     if (userDetails?.role === "user") {
-      // If the user is a 'user', redirect to the /myTickets page
-      navigate("/myTickets");
+      navigate("/createTicket");
     } else {
       (async () => {
         const response = await axiosSecure.get("/product", {

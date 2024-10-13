@@ -7,7 +7,8 @@ const axiosSecure = axios.create({
     "Content-Type": "application/json",
     Accept: "application/json",
     Authorization: `Bearer ${
-      localStorage.userDetails && JSON.parse(localStorage.userDetails).token
+      localStorage.getItem("userDetails") &&
+      JSON.parse(localStorage.getItem("userDetails")).token
     }`,
   },
 });
@@ -20,4 +21,18 @@ const axiosOpen = axios.create({
   },
 });
 
-export { axiosSecure, axiosOpen };
+const makeRequest = () => {
+  return axios.create({
+    baseURL: baseURL,
+    headers: {
+      "Content-Type": "application/json",
+      Accept: "application/json",
+      Authorization: `Bearer ${
+        localStorage.getItem("userDetails") &&
+        JSON.parse(localStorage.getItem("userDetails")).token
+      }`,
+    },
+  });
+};
+
+export { axiosSecure, axiosOpen, makeRequest };

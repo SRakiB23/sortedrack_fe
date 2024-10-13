@@ -11,8 +11,9 @@ import {
   Drawer,
   TextField,
   TextareaAutosize,
+  Modal,
 } from "@mui/material";
-import { axiosSecure } from "../../../src/api/axios";
+import { axiosSecure, makeRequest } from "../../../src/api/axios";
 import "./MyTickets.scss";
 import StarIcon from "@mui/icons-material/Star";
 import { FaInfoCircle } from "react-icons/fa";
@@ -26,11 +27,14 @@ const MyTickets = () => {
   const [myTickets, setMyTickets] = useState([]);
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
   const [comment, setComment] = useState("");
+  const [open, setOpen] = useState(false);
+  const handleOpen = () => setOpen(true);
+  const handleClose = () => setOpen(false);
 
   useEffect(() => {
     const fetchMyTickets = async () => {
       try {
-        const response = await axiosSecure.get("/mytickets");
+        const response = await makeRequest().get("/mytickets");
         setMyTickets(response.data);
       } catch (error) {
         console.error("Error fetching my tickets:", error);
@@ -97,7 +101,7 @@ const MyTickets = () => {
         confirmButtonColor: "#3085d6",
         confirmButtonText: "OK",
       });
-      
+
       // You could also optionally refetch ticket data here, but we'll handle it on drawer open instead.
     } catch (error) {
       console.error("Error adding comment:", error);
@@ -115,7 +119,9 @@ const MyTickets = () => {
     if (open && selectedTicket) {
       // If opening the drawer, fetch the latest ticket data
       try {
-        const response = await axiosSecure.get(`/tickets/${selectedTicket._id}`);
+        const response = await axiosSecure.get(
+          `/tickets/${selectedTicket._id}`
+        );
         setTicket(response.data); // Set the ticket data to the latest fetched data
       } catch (error) {
         console.error("Error fetching ticket data:", error);
@@ -154,6 +160,19 @@ const MyTickets = () => {
     }
   };
 
+  // MUI Modal styling
+  const modalStyle = {
+    position: "absolute",
+    top: "50%",
+    left: "50%",
+    transform: "translate(-50%, -50%)",
+    width: 500,
+    bgcolor: "background.paper",
+    boxShadow: 24,
+    p: 4,
+    borderRadius: 8,
+  };
+
   return (
     <div>
       <h2 className="mytickets-h2">
@@ -172,60 +191,62 @@ const MyTickets = () => {
                     >
                       Ticket ID: {ticketItem._id}
                     </Typography>
-                    <div className="icon-details2">
-                      <span className="details-title">Username: </span>
-                      {ticketItem.userName}
-                    </div>
 
-                    <div className="icon-details2">
-                      <span className="details-title">Email: </span>
-                      {ticketItem.email}
-                    </div>
-
-                    <div className="icon-details2">
-                      <span className="details-title">Department: </span>
-                      {ticketItem.department}
-                    </div>
-
-                    <div className="info">
-                      <div className="icon-details2">
-                        <span className="details-title">
-                          Requested Device:{" "}
-                        </span>
-                        {ticketItem.device}
+                    {/* Wrapper div for both titles and values */}
+                    <div className="ticket-info">
+                      <div className="details-titles">
+                        <p className="details-title">Username:</p>
+                        <p className="details-title">Email:</p>
+                        <p className="details-title">Department:</p>
+                        <p className="details-title">Req Device:</p>
+                        <p className="details-title">Priority:</p>
+                        <p className="details-title">Status:</p>
                       </div>
-                      <div className="icon-details2">
-                        <span className="details-title">Priority: </span>
-                        {ticketItem.priority}
-                        <Rating
-                          name="priority-rating"
-                          value={
-                            ticketItem.priority === "High"
-                              ? 3
-                              : ticketItem.priority === "Medium"
-                              ? 2
-                              : ticketItem.priority === "Low"
-                              ? 1
-                              : 0
-                          }
-                          readOnly
-                          size="small"
-                          max={3}
-                          icon={<StarIcon fontSize="inherit" />}
-                          emptyIcon={null}
-                        />
-                      </div>
-                      <div className="icon-details2">
-                        <span className="details-title">Status: </span>
-                        {ticketItem.status}
+
+                      <div className="details-values">
+                        <p>{ticketItem.userName}</p>
+                        <p>{ticketItem.email}</p>
+                        <p>{ticketItem.department}</p>
+                        <p>{ticketItem.device}</p>
+                        <p>
+                          {ticketItem.priority}
+                          <Rating
+                            name="priority-rating"
+                            value={
+                              ticketItem.priority === "High"
+                                ? 3
+                                : ticketItem.priority === "Medium"
+                                ? 2
+                                : ticketItem.priority === "Low"
+                                ? 1
+                                : 0
+                            }
+                            readOnly
+                            size="small"
+                            max={3}
+                            icon={<StarIcon fontSize="inherit" />}
+                            emptyIcon={null}
+                          />
+                        </p>
+                        <p>{ticketItem.status}</p>
                       </div>
                     </div>
                   </CardContent>
                 </div>
+
                 <CardActions className="card-action">
                   <Button
+                    className="detailsbtn"
+                    onClick={() => {
+                      setTicket(ticketItem);
+                      handleOpen();
+                    }}
+                  >
+                    <FaInfoCircle />
+                  </Button>
+                  <Button
                     className="updatebtn"
-                    onClick={() => toggleDrawer(true, ticketItem)} // Pass the current ticket item to the drawer
+                    onClick={() => toggleDrawer(true, ticketItem)}
                   >
                     <MdTipsAndUpdates />
                   </Button>
@@ -248,7 +269,7 @@ const MyTickets = () => {
               >
                 <Box p={2} width="440px" role="presentation">
                   <Typography className="ticketdetails">
-                    Ticket <span style={{ color: "#e58800" }}>Details</span>
+                    Update <span style={{ color: "#e58800" }}>Ticket</span>
                   </Typography>
                   <hr />
                   {ticket && (
@@ -258,7 +279,7 @@ const MyTickets = () => {
                         {ticket.userName}
                       </p>
                       <p variant="body1">
-                        <span style={{ fontWeight: "600" }}>Email: </span>{" "}
+                        <span style={{ fontWeight: "600" }}>Email: </span>
                         {ticket.email}
                       </p>
                       <p variant="body1">
@@ -295,52 +316,137 @@ const MyTickets = () => {
                         {ticket.status}
                       </p>
                       <p variant="body1">
-                        <span style={{ fontWeight: "600" }}>Additional Info: </span>
+                        <span style={{ fontWeight: "600" }}>
+                          Additional Info:{" "}
+                        </span>
                       </p>
 
                       <div className="additional-info-list">
                         {ticket.additionalInfo.map((info, index) => (
                           <p key={index}>
                             <strong>{info.userName}: </strong>
-                            <span>{info.comment}</span> <em>{new Date(info.date).toLocaleString()}</em>
+                            <span>{info.comment}</span>{" "}
+                            <em>{new Date(info.date).toLocaleString()}</em>
                           </p>
                         ))}
                       </div>
                     </>
                   )}
-          <TextField
-            fullWidth
-            multiline
-            rows={4}
-            label="Comment . . ."
-            value={comment}
-            onChange={handleCommentChange}
-            variant="outlined" // Ensure you are using the outlined variant
-            sx={{
-              marginTop: "38px",
-              "& .MuiOutlinedInput-root": {
-                borderRadius: "8px", // Apply border radius to the input wrapper
-              },
-            }}
-          />
-          <Button
-            variant="contained"
-            onClick={handleCommentSubmit}
-            sx={{
-              marginTop: "40px",
-              width: "150px",
-              marginLeft: "130px",
-              backgroundColor: "#e58800", // Custom background color
-              color: "white", // Custom text color
-              "&:hover": {
-                backgroundColor: "#ff9800", // Optional hover effect
-              },
-            }}
-          >
-            Add Comment
-          </Button>
+                  <TextField
+                    fullWidth
+                    multiline
+                    rows={4}
+                    label="Comment . . ."
+                    value={comment}
+                    onChange={handleCommentChange}
+                    variant="outlined" // Ensure you are using the outlined variant
+                    sx={{
+                      marginTop: "38px",
+                      "& .MuiOutlinedInput-root": {
+                        borderRadius: "8px", // Apply border radius to the input wrapper
+                      },
+                    }}
+                  />
+                  <Button
+                    variant="contained"
+                    onClick={handleCommentSubmit}
+                    sx={{
+                      marginTop: "40px",
+                      width: "150px",
+                      marginLeft: "130px",
+                      backgroundColor: "#e58800", // Custom background color
+                      color: "white", // Custom text color
+                      "&:hover": {
+                        backgroundColor: "#ff9800", // Optional hover effect
+                      },
+                    }}
+                  >
+                    Add Comment
+                  </Button>
                 </Box>
               </Drawer>
+              <Modal open={open} onClose={handleClose}>
+                <Box sx={modalStyle}>
+                  {ticket && (
+                    <div>
+                      <Typography className="ticketdetails">
+                        Ticket <span style={{ color: "#e58800" }}>Details</span>
+                      </Typography>
+                      <div
+                        style={{
+                          display: "flex",
+                          justifyContent: "space-between",
+                        }}
+                      >
+                        {/* Labels */}
+                        <div>
+                          <p variant="body1">
+                            <strong>Ticket ID:</strong>
+                          </p>
+                          <p variant="body1">
+                            <strong>User Name:</strong>
+                          </p>
+                          <p variant="body1">
+                            <strong>Email:</strong>
+                          </p>
+                          <p variant="body1">
+                            <strong>Department:</strong>
+                          </p>
+                          <p variant="body1">
+                            <strong>Device:</strong>
+                          </p>
+                          <p variant="body1">
+                            <strong>Priority:</strong>
+                          </p>
+                          <p variant="body1">
+                            <strong>Status:</strong>
+                          </p>
+                        </div>
+
+                        {/* Ticket Details */}
+                        <div>
+                          <p variant="body1">{ticket._id}</p>
+                          <p variant="body1">{ticket.userName}</p>
+                          <p variant="body1">{ticket.email}</p>
+                          <p variant="body1">{ticket.department}</p>
+                          <p variant="body1">{ticket.device}</p>
+                          <p variant="body1">
+                            {" "}
+                            {ticketItem.priority}
+                            <Rating
+                              name="priority-rating"
+                              value={
+                                ticketItem.priority === "High"
+                                  ? 3
+                                  : ticketItem.priority === "Medium"
+                                  ? 2
+                                  : ticketItem.priority === "Low"
+                                  ? 1
+                                  : 0
+                              }
+                              readOnly
+                              size="small"
+                              max={3}
+                              icon={<StarIcon fontSize="inherit" />}
+                              emptyIcon={null}
+                            />
+                          </p>
+                          <p variant="body1">{ticket.status}</p>
+                        </div>
+                      </div>
+                      <div className="commentarea">
+                        {ticket.additionalInfo.map((info, index) => (
+                          <p key={index}>
+                            <strong>{info.userName}: </strong>
+                            <span>{info.comment}</span> -
+                            <em>{new Date(info.date).toLocaleString()}</em>
+                          </p>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+                </Box>
+              </Modal>
             </Box>
           ))
         ) : (
@@ -350,6 +456,5 @@ const MyTickets = () => {
     </div>
   );
 };
-
 
 export default MyTickets;

@@ -90,9 +90,7 @@ const ListStock = () => {
         }`,
       },
     });
-    userList.current = data.user.filter(
-      (usr) => usr.branch === "Goa" && usr.status === "active"
-    );
+    userList.current = data.user.filter((usr) => usr.status === "active");
     const usersEmail = userList.current.map((user) => user.email);
     setEmailList(usersEmail);
   };
@@ -103,16 +101,45 @@ const ListStock = () => {
     handleAssignmentModal();
   };
 
+  // const handleUserStockAssignment = async () => {
+  //   const selectedUserId = userList.current.find(
+  //     (user) => user.email === selectedUserEmail[0]
+  //   )._id;
+
+  //   setShowLoader(true);
+  //   await axiosSecure.post(
+  //     "/assignedProduct",
+  //     {
+  //       branch: "Goa",
+  //       user: selectedUserId,
+  //       product: selectedStockId,
+  //     },
+  //     {
+  //       headers: {
+  //         Authorization: `Bearer ${
+  //           localStorage.userDetails &&
+  //           JSON.parse(localStorage.userDetails).token
+  //         }`,
+  //       },
+  //     }
+  //   );
+  //   setShowLoader(false);
+  //   setRefresh(!refresh);
+  //   handleAssignmentModal();
+  // };
+
   const handleUserStockAssignment = async () => {
-    const selectedUserId = userList.current.find(
+    const selectedUser = userList.current.find(
       (user) => user.email === selectedUserEmail[0]
-    )._id;
+    );
+    const selectedUserId = selectedUser._id;
+    const selectedUserBranch = selectedUser.branch; // Get the user's branch
 
     setShowLoader(true);
     await axiosSecure.post(
       "/assignedProduct",
       {
-        branch: "Goa",
+        branch: selectedUserBranch, // Use the user's branch dynamically
         user: selectedUserId,
         product: selectedStockId,
       },

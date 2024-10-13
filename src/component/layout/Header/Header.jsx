@@ -10,6 +10,7 @@ const Header = () => {
   const navigate = useNavigate();
 
   const handleLogout = () => {
+    localStorage.removeItem("userDetails");
     navigate("/login", { replace: true });
     logout();
   };
