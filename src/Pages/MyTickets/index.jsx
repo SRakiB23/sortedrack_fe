@@ -269,7 +269,7 @@ const MyTickets = () => {
               >
                 <Box p={2} width="440px" role="presentation">
                   <Typography className="ticketdetails">
-                    Update <span style={{ color: "#e58800" }}>Ticket</span>
+                    Update <span style={{ color: "#82b440" }}>Ticket</span>
                   </Typography>
                   <hr />
                   {ticket && (
@@ -316,9 +316,7 @@ const MyTickets = () => {
                         {ticket.status}
                       </p>
                       <p variant="body1">
-                        <span style={{ fontWeight: "600" }}>
-                          Additional Info:{" "}
-                        </span>
+                        <span style={{ fontWeight: "600" }}>Comments:</span>
                       </p>
 
                       <div className="additional-info-list">
@@ -354,10 +352,10 @@ const MyTickets = () => {
                       marginTop: "40px",
                       width: "150px",
                       marginLeft: "130px",
-                      backgroundColor: "#e58800", // Custom background color
+                      backgroundColor: "#82b440", // Custom background color
                       color: "white", // Custom text color
                       "&:hover": {
-                        backgroundColor: "#ff9800", // Optional hover effect
+                        backgroundColor: "#82b340", // Optional hover effect
                       },
                     }}
                   >

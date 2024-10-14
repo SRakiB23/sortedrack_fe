@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { axiosSecure } from "../../api/axios"; // Adjust the import path for your axios instance
 import { Box, Typography, Card, CardContent } from "@mui/material";
 import "./AssignedDevices.scss";
+import { MdDevices } from "react-icons/md";
 
 const AssignedDevices = () => {
   const [assignedDevices, setAssignedDevices] = useState([]);
@@ -36,7 +37,12 @@ const AssignedDevices = () => {
             <div className="device-card-container">
               <div className="assigned-details">
                 <div>
-                  <p className="detailstitle">Product: </p>
+                  <p className="detailstitle">
+                    <span className="icons">
+                      <MdDevices />
+                    </span>
+                    Device:
+                  </p>
                   <p className="detailstitle">Category: </p>
                   <p className="detailstitle">Branch: </p>
                   <p className="detailstitle">Status: </p>
