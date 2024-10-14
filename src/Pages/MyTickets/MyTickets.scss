@@ -20,7 +20,7 @@
     height: 314px;
     border-radius: 12px !important;
     box-shadow: 1px 6px 4px rgba(0, 0, 0, 0.2);
-    background-color: #addf6b68 !important;
+    background-color: #e5faca68!important;
   }
 
   .card-action{
@@ -96,16 +96,16 @@
 .additional-info-list {
   display: flex;
   flex-direction: column;
-  width: 100%;
+  width: 98%;
   overflow-y: auto;
   max-height: 200px;
-  background-color: #caf09968;
+  background-color: #cacfc4;
   padding: 10px;
   border-radius: 8px;
 }
 
 .additional-info-list p{
-  background-color: #b1e074d2;
+  background-color: #eefae0;
   padding: 6px 3px 2px 10px;
   border-radius: 8px;
   min-height: 60px;
@@ -118,13 +118,13 @@
   width: 440px;
   overflow-y: auto;
   max-height: 360px;
-  background-color: #99b279;
+  background-color: #cacfc4;
   padding: 10px;
   border-radius: 8px;
 }
 
 .commentarea p{
-  background-color: #82b440;
+  background-color: #eefae0;
   padding: 6px 3px 2px 10px;
   border-radius: 8px;
   min-height: 60px;

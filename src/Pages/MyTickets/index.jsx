@@ -368,7 +368,7 @@ const MyTickets = () => {
                   {ticket && (
                     <div>
                       <Typography className="ticketdetails">
-                        Ticket <span style={{ color: "#e58800" }}>Details</span>
+                        Ticket <span style={{ color: "#82B440" }}>Details</span>
                       </Typography>
                       <div
                         style={{
@@ -409,7 +409,7 @@ const MyTickets = () => {
                           <p variant="body1">{ticket.department}</p>
                           <p variant="body1">{ticket.device}</p>
                           <p variant="body1">
-                            {" "}
+              
                             {ticketItem.priority}
                             <Rating
                               name="priority-rating"

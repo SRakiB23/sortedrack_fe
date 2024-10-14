@@ -38,12 +38,10 @@ const AssignedDevices = () => {
               <div className="assigned-details">
                 <div>
                   <p className="detailstitle">
-                    <span className="icons">
-                      <MdDevices />
-                    </span>
                     Device:
                   </p>
                   <p className="detailstitle">Category: </p>
+                  <p className="detailstitle">Brand: </p>
                   <p className="detailstitle">Branch: </p>
                   <p className="detailstitle">Status: </p>
                   <p className="detailstitle">Assigned At:</p>
@@ -51,6 +49,7 @@ const AssignedDevices = () => {
                 <div key={device._id} className="device-card">
                   <p className="details-p">{device.product.productType}</p>
                   <p>{device.product.productCategory}</p>
+                  <p>{device.product.systemBrand ? device.product.systemBrand : '\u00A0'}</p>
                   <p>{device.product.branch}</p>
                   <p>{device.status}</p>
                   <p>{new Date(device.createdAt).toLocaleString()}</p>

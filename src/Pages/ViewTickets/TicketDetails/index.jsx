@@ -20,6 +20,8 @@ import { HiOutlineBuildingOffice2 } from "react-icons/hi2";
 import { FcHighPriority } from "react-icons/fc";
 import { GrStatusUnknown } from "react-icons/gr";
 import { IoTicket } from "react-icons/io5";
+import { FaBoxArchive } from "react-icons/fa6";
+
 
 const TicketDetails = () => {
   const { id } = useParams();
@@ -53,6 +55,18 @@ const TicketDetails = () => {
 
   // Handle status update
   const handleStatusSubmit = async () => {
+    // Check if the current status is "Closed"
+    if (ticket.status === "Closed") {
+      Swal.fire({
+        title: "Error!",
+        text: "This ticket is already resolved. No further updates are allowed.",
+        icon: "error",
+        confirmButtonColor: "#d33",
+        confirmButtonText: "OK",
+      });
+      return; // Prevent the update
+    }
+
     if (!status) {
       Swal.fire({
         title: "Error!",
@@ -246,8 +260,9 @@ const TicketDetails = () => {
                     className="status-select"
                   >
                     <option value="">Change Status</option>
+                    <option value="Open">Open</option>
                     <option value="In progress">In Progress</option>
-                    <option value="Solved">Solved</option>
+                    <option value="Closed">Closed</option>
                     <option value="Rejected">Rejected</option>
                   </Select>
                 </FormControl>
@@ -266,6 +281,7 @@ const TicketDetails = () => {
           </div>
         </div>
         <div className="rightside">
+
           <h2 className="comments">
             <span className="ticketIcon">
               <FaComments />
@@ -327,7 +343,7 @@ const TicketDetails = () => {
                 marginTop: "40px",
                 width: "400px",
                 marginLeft: "70px",
-                backgroundColor: "rgb(107, 188, 200)",
+                backgroundColor: "#6BBCC8",
                 color: "white", // Custom text color
                 "&:hover": {
                   backgroundColor: "rgb(109, 190, 195)", // Optional hover effect
@@ -338,6 +354,21 @@ const TicketDetails = () => {
             </Button>
           </div>
         </div>
+       <div className="arhieveContainer">
+        <h2>
+          Arhieve Ticket
+        </h2>
+        <hr />
+       <Button className="arhieve" sx={{
+                backgroundColor: "#6BBCC8",
+                color: "white",
+                "&:hover": {
+                  backgroundColor: "rgb(109, 190, 195)", 
+                },
+              }}>
+        <FaBoxArchive />
+        </Button>
+       </div>
       </div>
     </div>
   );

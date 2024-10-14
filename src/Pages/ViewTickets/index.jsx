@@ -10,7 +10,17 @@ import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
 import TablePagination from "@mui/material/TablePagination"; // Import for pagination
 import { axiosSecure } from "../../../src/api/axios";
-import { FormControl, Select, MenuItem, Tooltip, Modal, Box, Typography, Button } from "@mui/material";
+import Swal from "sweetalert2";
+import {
+  FormControl,
+  Select,
+  MenuItem,
+  Tooltip,
+  Modal,
+  Box,
+  Typography,
+  Button,
+} from "@mui/material";
 import { FaEye } from "react-icons/fa6";
 import { FaExchangeAlt } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
@@ -29,11 +39,11 @@ const StyledTableCell = styled(TableCell)(({ theme }) => ({
 }));
 
 const StyledTableRow = styled(TableRow)(({ theme }) => ({
-  '&:nth-of-type(odd)': {
+  "&:nth-of-type(odd)": {
     backgroundColor: theme.palette.action.hover,
   },
   // hide last border
-  '&:last-child td, &:last-child th': {
+  "&:last-child td, &:last-child th": {
     border: 0,
   },
 }));
@@ -96,26 +106,35 @@ const ViewTicket = () => {
     setPage(0);
   };
 
-  // Handle modal open and store the selected ticket
   const handleOpenModal = (ticket) => {
+    if (ticket.status === "Closed") {
+      Swal.fire({
+        icon: "info",
+        title: "Ticket Closed",
+        text: "This ticket is already resolved. No further updates are allowed.",
+      });
+      return;
+    }
     setSelectedTicket(ticket);
-    setNewStatus(ticket.status); // Set current status in modal
+    setNewStatus(ticket.status);
     setOpen(true);
   };
 
-  // Handle modal close
   const handleCloseModal = () => {
     setOpen(false);
   };
 
-  // Handle status update from modal
   const handleUpdateStatus = async () => {
     if (selectedTicket) {
       try {
-        await axiosSecure.put(`/tickets/${selectedTicket._id}`, { status: newStatus });
+        await axiosSecure.put(`/tickets/${selectedTicket._id}`, {
+          status: newStatus,
+        });
         setTickets((prevTickets) =>
           prevTickets.map((ticket) =>
-            ticket._id === selectedTicket._id ? { ...ticket, status: newStatus } : ticket
+            ticket._id === selectedTicket._id
+              ? { ...ticket, status: newStatus }
+              : ticket
           )
         );
         handleCloseModal();
@@ -156,8 +175,9 @@ const ViewTicket = () => {
 
   return (
     <div>
-      <h2 className="ticket-header">All <span style={{color:"#6bbcc8"}}>Tickets</span></h2>
-
+      <h2 className="ticket-header">
+        All <span style={{ color: "#6bbcc8" }}>Tickets</span>
+      </h2>
       {/* Sorting Selectors */}
       <div
         style={{
@@ -192,13 +212,13 @@ const ViewTicket = () => {
               <span>Sort by Status</span>
             </MenuItem>
             <MenuItem value="Pending">Pending</MenuItem>
+            <MenuItem value="Open">Open</MenuItem>
             <MenuItem value="In progress">In progress</MenuItem>
-            <MenuItem value="Solved">Solved</MenuItem>
+            <MenuItem value="Closed">Closed</MenuItem>
             <MenuItem value="Rejected">Rejected</MenuItem>
           </Select>
         </FormControl>
       </div>
-
       <div className="all-ticket-container">
         <TableContainer component={Paper}>
           <Table sx={{ minWidth: 700 }} aria-label="customized table">
@@ -208,7 +228,9 @@ const ViewTicket = () => {
                 <StyledTableCell align="center">Department</StyledTableCell>
                 <StyledTableCell align="center">Device</StyledTableCell>
                 <StyledTableCell align="center">Priority</StyledTableCell>
-                <StyledTableCell align="center">Additional Info</StyledTableCell>
+                <StyledTableCell align="center">
+                  Additional Info
+                </StyledTableCell>
                 <StyledTableCell align="center">Status</StyledTableCell>
                 <StyledTableCell align="center">Action</StyledTableCell>
               </TableRow>
@@ -219,9 +241,15 @@ const ViewTicket = () => {
                   <StyledTableCell component="th" scope="row" align="center">
                     {ticket.userName}
                   </StyledTableCell>
-                  <StyledTableCell align="center">{ticket.department}</StyledTableCell>
-                  <StyledTableCell align="center">{ticket.device}</StyledTableCell>
-                  <StyledTableCell align="center">{ticket.priority}</StyledTableCell>
+                  <StyledTableCell align="center">
+                    {ticket.department}
+                  </StyledTableCell>
+                  <StyledTableCell align="center">
+                    {ticket.device}
+                  </StyledTableCell>
+                  <StyledTableCell align="center">
+                    {ticket.priority}
+                  </StyledTableCell>
                   <StyledTableCell align="center">
                     {Array.isArray(ticket.additionalInfo) &&
                     ticket.additionalInfo.length > 0
@@ -230,7 +258,9 @@ const ViewTicket = () => {
                         : ticket.additionalInfo[0].comment
                       : "No comments available"}
                   </StyledTableCell>
-                  <StyledTableCell align="center">{ticket.status}</StyledTableCell>
+                  <StyledTableCell align="center">
+                    {ticket.status}
+                  </StyledTableCell>
                   <StyledTableCell align="center">
                     <div className="buttons">
                       <Tooltip title="Change Status" arrow>
@@ -257,7 +287,7 @@ const ViewTicket = () => {
           </Table>
           {/* Pagination */}
           <TablePagination
-            rowsPerPageOptions={[10, 50]}
+            rowsPerPageOptions={[5, 10]}
             component="div"
             count={sortedTickets.length}
             rowsPerPage={rowsPerPage}
@@ -267,35 +297,53 @@ const ViewTicket = () => {
           />
         </TableContainer>
       </div>
-
       {/* Modal for changing ticket status */}
-      <Modal open={open} onClose={handleCloseModal} aria-labelledby="status-modal">
-  <Box sx={modalStyle}>
-    <Typography id="status-modal" variant="h6" component="h2" className="modal-header">
-      Change Ticket Status
-    </Typography>
-    {selectedTicket && ( // Ensure selectedTicket is defined
-      <p style={{paddingTop:"20px"}}>Current Status:
-       <span style={{paddingLeft:"10px", color:"#039eb9"}}>{selectedTicket.status}</span></p>
-    )}
-    <FormControl fullWidth margin="normal">
-      <Select
-        value={newStatus}
-        onChange={(e) => setNewStatus(e.target.value)}
+      <Modal
+        open={open}
+        onClose={handleCloseModal}
+        aria-labelledby="status-modal"
       >
-        <MenuItem value="Pending">Pending</MenuItem>
-        <MenuItem value="In progress">In progress</MenuItem>
-        <MenuItem value="Solved">Solved</MenuItem>
-        <MenuItem value="Rejected">Rejected</MenuItem>
-      </Select>
-    </FormControl>
-    <Button onClick={handleUpdateStatus} variant="contained" 
-    style={{backgroundColor:"#039eb9"}}>
-      Update Status
-    </Button>
-  </Box>
-</Modal>
-
+        <Box sx={modalStyle}>
+          <Typography
+            id="status-modal"
+            variant="h6"
+            component="h2"
+            className="modal-header"
+          >
+            Change Ticket Status
+          </Typography>
+          {selectedTicket && (
+            <p style={{ paddingTop: "20px" }}>
+              Current Status:
+              <span style={{ paddingLeft: "10px", color: "#039eb9" }}>
+                {selectedTicket.status}
+              </span>
+            </p>
+          )}
+          <FormControl fullWidth margin="normal">
+            <Select
+              value={newStatus}
+              onChange={(e) => setNewStatus(e.target.value)}
+              disabled={selectedTicket?.status === "Closed"} // Disable if status is Closed
+            >
+              <MenuItem value="Pending">Pending</MenuItem>
+              <MenuItem value="Open">Open</MenuItem>
+              <MenuItem value="In progress">In progress</MenuItem>
+              <MenuItem value="Closed">Closed</MenuItem>
+              <MenuItem value="Rejected">Rejected</MenuItem>
+            </Select>
+          </FormControl>
+          <Button
+            onClick={handleUpdateStatus}
+            variant="contained"
+            style={{ backgroundColor: "#039eb9" }}
+            disabled={selectedTicket?.status === "Closed"} // Disable button if status is Closed
+          >
+            Update Status
+          </Button>
+        </Box>
+      </Modal>
+      ;
     </div>
   );
 };

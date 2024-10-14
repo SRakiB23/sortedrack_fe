@@ -27,15 +27,13 @@
     width: 98%;
     overflow-y: auto;
     height: 272px !important;
-
   }
   
   .comment {
     max-width: 100%;
-    padding: 12px 10px 6px 14px;
+    padding: 8px 10px 4px 14px;
     border-radius: 10px;
     margin: 6px 2px 2px 18px;
-    
   }
   
   .comment.left {
@@ -45,8 +43,9 @@
   
   .comment.right {
     align-self: flex-end;
-    background-color: rgb(196, 224, 229);
-    box-shadow: 2px 2px 4px rgba(0,0,0,0.3)
+    background-color: rgb(240, 245, 245);
+    box-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+    margin-bottom: 12px;
   }
   
 .status-select{
@@ -68,7 +67,7 @@
 }
 
 .leftside-details{
-    background-color: #fefeff;
+    background-color: #FFFFFF;
     border-radius: 8px;
     padding: 10px;
     box-shadow: 0px 10px 6px rgba(0, 0, 0, 0.10);
@@ -139,7 +138,7 @@
     margin-top: 40px;
     padding: 10px 2px 2px 22px;
     border-radius: 8px;
-    background-color: #fefeff;
+    background-color: #FFFFFF;
     box-shadow: 0px 10px 6px rgba(0, 0, 0, 0.10);
     border: 2px solid rgb(236, 236, 236);
     height: 210px;
@@ -197,6 +196,31 @@
 .comments{
     font-weight: 600;
     padding: 6px 4px 6px 10px;
-    border-left: 8px solid rgb(107, 188, 200);
+    border-left: 8px solid #6BBCC8;
 }
 
+.comment-author{
+    font-weight: 600;
+}
+
+.arhieveContainer{
+    margin: auto;
+    text-align: center;
+    background-color: #FFFFFF;
+    padding: 10px;
+    border-radius: 8px;
+    box-shadow: 0px 2px 8px (rgba(0,0,0,0.3));
+    width: 260px;
+}
+
+.arhieveContainer h2{
+    font-weight: 600;
+    font-size: 32px;
+}
+
+
+.arhieve{
+    margin: auto;
+    font-size: 32px;
+    font-weight: 600;
+}
